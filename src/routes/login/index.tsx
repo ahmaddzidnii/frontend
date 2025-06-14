@@ -70,7 +70,7 @@ function FormComponent() {
       }}
       className="flex flex-col gap-4"
     >
-      <div className="space-y-2">
+      <div className="flex flex-col space-y-2">
         <label
           htmlFor="username"
           className="text-sm font-medium text-gray-700 dark:text-gray-300"

@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as DashIndexRouteImport } from './routes/dash/index'
+import { Route as KrsPengisianIndexRouteImport } from './routes/krs/pengisian/index'
+import { Route as KrsLihatIndexRouteImport } from './routes/krs/lihat/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +25,64 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashIndexRoute = DashIndexRouteImport.update({
+  id: '/dash/',
+  path: '/dash/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KrsPengisianIndexRoute = KrsPengisianIndexRouteImport.update({
+  id: '/krs/pengisian/',
+  path: '/krs/pengisian/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KrsLihatIndexRoute = KrsLihatIndexRouteImport.update({
+  id: '/krs/lihat/',
+  path: '/krs/lihat/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dash': typeof DashIndexRoute
   '/login': typeof LoginIndexRoute
+  '/krs/lihat': typeof KrsLihatIndexRoute
+  '/krs/pengisian': typeof KrsPengisianIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dash': typeof DashIndexRoute
   '/login': typeof LoginIndexRoute
+  '/krs/lihat': typeof KrsLihatIndexRoute
+  '/krs/pengisian': typeof KrsPengisianIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dash/': typeof DashIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/krs/lihat/': typeof KrsLihatIndexRoute
+  '/krs/pengisian/': typeof KrsPengisianIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths: '/' | '/dash' | '/login' | '/krs/lihat' | '/krs/pengisian'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login/'
+  to: '/' | '/dash' | '/login' | '/krs/lihat' | '/krs/pengisian'
+  id:
+    | '__root__'
+    | '/'
+    | '/dash/'
+    | '/login/'
+    | '/krs/lihat/'
+    | '/krs/pengisian/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashIndexRoute: typeof DashIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  KrsLihatIndexRoute: typeof KrsLihatIndexRoute
+  KrsPengisianIndexRoute: typeof KrsPengisianIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +101,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dash/': {
+      id: '/dash/'
+      path: '/dash'
+      fullPath: '/dash'
+      preLoaderRoute: typeof DashIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/krs/pengisian/': {
+      id: '/krs/pengisian/'
+      path: '/krs/pengisian'
+      fullPath: '/krs/pengisian'
+      preLoaderRoute: typeof KrsPengisianIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/krs/lihat/': {
+      id: '/krs/lihat/'
+      path: '/krs/lihat'
+      fullPath: '/krs/lihat'
+      preLoaderRoute: typeof KrsLihatIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashIndexRoute: DashIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  KrsLihatIndexRoute: KrsLihatIndexRoute,
+  KrsPengisianIndexRoute: KrsPengisianIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
