@@ -1,0 +1,35 @@
+{
+  "status": "success",
+  "message": "Data KRS yang tersedia berhasil diambil.",
+  "data": [
+    {
+      "id": 1,
+      "kode_matkul": "S2INF20",
+      "kode_internal": "INF524108",
+      "nama_matkul": "Computer Vision",
+      "sks": 4,
+      "kelas": "A",
+      "jenis": "PILIHAN",
+      "dosen": [
+        {
+          "nama": "Gandewa Iswahyudi M.Kom",
+          "nip": "198609262015051001"
+        }
+      ],
+      "jadwal": [
+        {
+          "hari": "Senin",
+          "waktu_mulai": "12:30",
+          "waktu_selesai": "14:15",
+          "ruang": "FST-102"
+        },
+        {
+          "hari": "Kamis",
+          "waktu_mulai": "07:00",
+          "waktu_selesai": "08:45",
+          "ruang": "FST-102"
+        }
+      ]
+    }
+  ]
+}

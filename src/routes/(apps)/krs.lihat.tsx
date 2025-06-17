@@ -1,17 +1,16 @@
 import { Alert } from "@/components/Alert";
-import { DashboardLayout } from "@/layout/Dashboardlayout";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/dash/")({
+export const Route = createFileRoute("/(apps)/krs/lihat")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   return (
-    <DashboardLayout>
+    <>
       <header className="bg-white shadow  w-full">
         <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15] ">
-          <span className="text-xl">Dashboard</span>
+          <span className="text-xl">Data Isian KRS Terakhir</span>
         </nav>
       </header>
 
@@ -36,6 +35,6 @@ function RouteComponent() {
           </p>
         </Alert>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

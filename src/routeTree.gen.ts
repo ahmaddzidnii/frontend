@@ -9,59 +9,65 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as appsRouteRouteImport } from './routes/(apps)/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
-import { Route as DashIndexRouteImport } from './routes/dash/index'
-import { Route as KrsPengisianIndexRouteImport } from './routes/krs/pengisian/index'
-import { Route as KrsLihatIndexRouteImport } from './routes/krs/lihat/index'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as appsDashRouteImport } from './routes/(apps)/dash'
+import { Route as appsKrsPengisianRouteImport } from './routes/(apps)/krs.pengisian'
+import { Route as appsKrsLihatRouteImport } from './routes/(apps)/krs.lihat'
 
+const appsRouteRoute = appsRouteRouteImport.update({
+  id: '/(apps)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/(auth)/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashIndexRoute = DashIndexRouteImport.update({
-  id: '/dash/',
-  path: '/dash/',
-  getParentRoute: () => rootRouteImport,
+const appsDashRoute = appsDashRouteImport.update({
+  id: '/dash',
+  path: '/dash',
+  getParentRoute: () => appsRouteRoute,
 } as any)
-const KrsPengisianIndexRoute = KrsPengisianIndexRouteImport.update({
-  id: '/krs/pengisian/',
-  path: '/krs/pengisian/',
-  getParentRoute: () => rootRouteImport,
+const appsKrsPengisianRoute = appsKrsPengisianRouteImport.update({
+  id: '/krs/pengisian',
+  path: '/krs/pengisian',
+  getParentRoute: () => appsRouteRoute,
 } as any)
-const KrsLihatIndexRoute = KrsLihatIndexRouteImport.update({
-  id: '/krs/lihat/',
-  path: '/krs/lihat/',
-  getParentRoute: () => rootRouteImport,
+const appsKrsLihatRoute = appsKrsLihatRouteImport.update({
+  id: '/krs/lihat',
+  path: '/krs/lihat',
+  getParentRoute: () => appsRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dash': typeof DashIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/krs/lihat': typeof KrsLihatIndexRoute
-  '/krs/pengisian': typeof KrsPengisianIndexRoute
+  '/': typeof appsRouteRouteWithChildren
+  '/dash': typeof appsDashRoute
+  '/login': typeof authLoginRoute
+  '/krs/lihat': typeof appsKrsLihatRoute
+  '/krs/pengisian': typeof appsKrsPengisianRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dash': typeof DashIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/krs/lihat': typeof KrsLihatIndexRoute
-  '/krs/pengisian': typeof KrsPengisianIndexRoute
+  '/': typeof appsRouteRouteWithChildren
+  '/dash': typeof appsDashRoute
+  '/login': typeof authLoginRoute
+  '/krs/lihat': typeof appsKrsLihatRoute
+  '/krs/pengisian': typeof appsKrsPengisianRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dash/': typeof DashIndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/krs/lihat/': typeof KrsLihatIndexRoute
-  '/krs/pengisian/': typeof KrsPengisianIndexRoute
+  '/(apps)': typeof appsRouteRouteWithChildren
+  '/(apps)/dash': typeof appsDashRoute
+  '/(auth)/login': typeof authLoginRoute
+  '/(apps)/krs/lihat': typeof appsKrsLihatRoute
+  '/(apps)/krs/pengisian': typeof appsKrsPengisianRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,22 +77,28 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/dash/'
-    | '/login/'
-    | '/krs/lihat/'
-    | '/krs/pengisian/'
+    | '/(apps)'
+    | '/(apps)/dash'
+    | '/(auth)/login'
+    | '/(apps)/krs/lihat'
+    | '/(apps)/krs/pengisian'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashIndexRoute: typeof DashIndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
-  KrsLihatIndexRoute: typeof KrsLihatIndexRoute
-  KrsPengisianIndexRoute: typeof KrsPengisianIndexRoute
+  appsRouteRoute: typeof appsRouteRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(apps)': {
+      id: '/(apps)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof appsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -94,43 +106,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login/': {
-      id: '/login/'
+    '/(auth)/login': {
+      id: '/(auth)/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginIndexRouteImport
+      preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dash/': {
-      id: '/dash/'
+    '/(apps)/dash': {
+      id: '/(apps)/dash'
       path: '/dash'
       fullPath: '/dash'
-      preLoaderRoute: typeof DashIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof appsDashRouteImport
+      parentRoute: typeof appsRouteRoute
     }
-    '/krs/pengisian/': {
-      id: '/krs/pengisian/'
+    '/(apps)/krs/pengisian': {
+      id: '/(apps)/krs/pengisian'
       path: '/krs/pengisian'
       fullPath: '/krs/pengisian'
-      preLoaderRoute: typeof KrsPengisianIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof appsKrsPengisianRouteImport
+      parentRoute: typeof appsRouteRoute
     }
-    '/krs/lihat/': {
-      id: '/krs/lihat/'
+    '/(apps)/krs/lihat': {
+      id: '/(apps)/krs/lihat'
       path: '/krs/lihat'
       fullPath: '/krs/lihat'
-      preLoaderRoute: typeof KrsLihatIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof appsKrsLihatRouteImport
+      parentRoute: typeof appsRouteRoute
     }
   }
 }
 
+interface appsRouteRouteChildren {
+  appsDashRoute: typeof appsDashRoute
+  appsKrsLihatRoute: typeof appsKrsLihatRoute
+  appsKrsPengisianRoute: typeof appsKrsPengisianRoute
+}
+
+const appsRouteRouteChildren: appsRouteRouteChildren = {
+  appsDashRoute: appsDashRoute,
+  appsKrsLihatRoute: appsKrsLihatRoute,
+  appsKrsPengisianRoute: appsKrsPengisianRoute,
+}
+
+const appsRouteRouteWithChildren = appsRouteRoute._addFileChildren(
+  appsRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashIndexRoute: DashIndexRoute,
-  LoginIndexRoute: LoginIndexRoute,
-  KrsLihatIndexRoute: KrsLihatIndexRoute,
-  KrsPengisianIndexRoute: KrsPengisianIndexRoute,
+  appsRouteRoute: appsRouteRouteWithChildren,
+  authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

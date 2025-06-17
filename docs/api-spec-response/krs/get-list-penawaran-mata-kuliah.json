@@ -1,0 +1,51 @@
+{
+  "status": "success",
+  "message": "Data semua paket semester berhasil diambil.",
+  "data": [
+    {
+      "nama_paket": "SEMESTER PAKET 2",
+      "mata_kuliah": [
+        {
+          "kurikulum": "S2INF20",
+          "id_matkul": "INF524108",
+          "nama_matkul": "Computer Vision",
+          "sks": 4,
+          "kelas": "A",
+          "jenis": "PILIHAN",
+          "dosen": [
+            {
+              "nama": "Nama Dosen A",
+              "nip": "1234567890"
+            }
+          ],
+          "kuota": { "terisi": 27, "total": 30 },
+          "jadwal": [
+            { "hari": "Senin", "waktu_mulai": "12:30", "waktu_selesai": "14:15", "ruang": "FST-102" },
+            { "hari": "Kamis", "waktu_mulai": "07:00", "waktu_selesai": "08:45", "ruang": "FST-102" }
+          ]
+        }
+      ]
+    },
+    {
+      "nama_paket": "SEMESTER PAKET 4",
+      "mata_kuliah": [
+        {
+          "kurikulum": "S4INF30",
+          "id_matkul": "INF724211",
+          "nama_matkul": "Machine Learning",
+          "sks": 4,
+          "kelas": "A",
+          "jenis": "WAJIB",
+          "dosen": [
+            {
+              "nama": "Nama Dosen B",
+              "nip": "0987654321"
+            }
+          ],
+          "kuota": { "terisi": 25, "total": 30 },
+          "jadwal": [{ "hari": "Selasa", "waktu_mulai": "09:00", "waktu_selesai": "10:45", "ruang": "FST-301" }]
+        }
+      ]
+    }
+  ]
+}

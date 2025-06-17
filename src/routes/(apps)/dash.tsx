@@ -1,21 +1,23 @@
 import { Alert } from "@/components/Alert";
-import { DashboardLayout } from "@/layout/Dashboardlayout";
+import { useAuth } from "@/context/AuthContext";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/krs/lihat/")({
+export const Route = createFileRoute("/(apps)/dash")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { user, status } = useAuth();
+  console.log(status);
   return (
-    <DashboardLayout>
+    <>
       <header className="bg-white shadow  w-full">
         <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15] ">
-          <span className="text-xl">Data Isian KRS Terakhir</span>
+          <span className="text-xl">Dashboard</span>
         </nav>
       </header>
 
-      <div className="shadow flex-1  p-10 flex flex-col gap-5">
+      <div className="shadow flex-1  p-10 flex flex-col gap-5 bg-[#ecedf1]">
         <Alert>
           <p>
             Jika mengalami error silahkan disampaikan melalui{" "}
@@ -35,7 +37,8 @@ function RouteComponent() {
             Selamat datang di Kartu Rencana Studi (KRS) UIN Sunan Kalijaga Yogyakarta.
           </p>
         </Alert>
+        {status == "pending" ? "Loading.." : JSON.stringify(user)}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { SidebarButton } from "@/components/SidebarButton";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useConfirmation } from "@/hooks/useConfirmDialog";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -15,10 +16,25 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
+
+  const { confirm } = useConfirmation();
+
+  const handleLogout = async () => {
+    const isConfirmed = await confirm({
+      message: "Apakah Anda yakin ingin keluar dari Kartu Rencana Studi?",
+      confirmText: "Keluar",
+      type: "warning",
+    });
+
+    if (isConfirmed) {
+      // Lakukan logout
+      console.log("User logout");
+    }
+  };
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto flex pt-24 min-h-screen">
+      <div className="max-w-7xl mx-auto flex pt-20 min-h-screen">
         <aside className="bg-white shadow w-72 ">
           <div className="relative h-[52px] flex items-center pl-5">
             <span className="font-bold">Navigasi</span>
@@ -70,14 +86,17 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               icon={FaSignOutAlt}
               isActive={false}
               label="Logout"
-              onClick={() => {
-                // Handle click for Dashboard
-              }}
+              onClick={handleLogout}
             />
           </div>
         </aside>
         <main className="flex-1 flex flex-col">{children}</main>
       </div>
+      {/* <footer className="bg-white shadow w-full p-4 text-center mt-5">
+        <p className="text-muted-foreground text-xs text-center">
+          Copyright © {new Date().getFullYear()} <span className="font-bold">PTIPD - UIN Sunan Kalijaga.</span> All rights reserved.
+        </p>
+      </footer> */}
     </>
   );
 };

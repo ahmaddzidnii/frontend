@@ -1,11 +1,14 @@
+import { useState } from "react";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
+
+import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AuthLayout } from "@/layout/AuthLayout";
-import { createFileRoute } from "@tanstack/react-router";
-import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
-import { useState } from "react";
+import { AuthLayout } from "@/layouts/AuthLayout";
+import { useAuth } from "@/context/AuthContext";
 
-export const Route = createFileRoute("/login/")({
+export const Route = createFileRoute("/(auth)/login")({
   component: RouteComponent,
   head: () => ({
     meta: [
@@ -17,19 +20,19 @@ export const Route = createFileRoute("/login/")({
 });
 
 function RouteComponent() {
+  const { status } = useAuth();
+
+  if (status === "pending") {
+    return <div className="p-4">Loading...</div>;
+  }
+
+  if (status === "authenticated") {
+    return <Navigate to="/dash" />;
+  }
   return (
     <AuthLayout>
       <div className="flex flex-col items-center justify-center w-full h-full gap-5">
-        <div className="flex items-center gap-2">
-          <img
-            className="size-16 aspect-square"
-            src="/uinsk-logo.png"
-          />
-          <img
-            className="w-full h-16 aspect-video"
-            src="/uinsk-tulisan.png"
-          />
-        </div>
+        <Logo />
         <Card className="w-[450px] rounded-[5px] border-t-5 border-t-[#105E15]">
           <CardContent className="flex flex-col gap-5">
             <CardHeader className="text-center p-0">
