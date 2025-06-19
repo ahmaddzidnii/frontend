@@ -1,3 +1,4 @@
+import { LoaderFallback } from "@/components/LoaderFallback";
 import { useAuth } from "@/context/AuthContext";
 import { DashboardLayout } from "@/layouts/Dashboardlayout";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
@@ -10,7 +11,7 @@ function RouteComponent() {
   const auth = useAuth();
 
   if (auth.status === "pending") {
-    return <div className="p-4">Loading...</div>;
+    return <LoaderFallback className="h-screen" />;
   }
 
   if (auth.status === "unauthenticated") {

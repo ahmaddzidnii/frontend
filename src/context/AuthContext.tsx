@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getMe } from "@/api/get-me";
+import { getSessionData } from "@/api/get-session";
 import { authKeys } from "@/lib/query-keys";
 
 interface User {
@@ -28,11 +28,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { data: user, isLoading } = useQuery({
     queryKey: authKeys.me(),
     queryFn: async () => {
-      const me = await getMe();
+      const session = await getSessionData();
       return {
-        id: me.data.id,
-        name: me.data.nama,
-        nim: me.data.nim,
+        id: session.data.id_mahasiswa,
+        name: session.data.nama,
+        nim: session.data.nim,
       };
     },
     retry: false,

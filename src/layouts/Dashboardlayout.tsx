@@ -1,20 +1,26 @@
 import { MenuIcon } from "lucide-react";
 import { FaListCheck } from "react-icons/fa6";
 import { FaClipboard, FaHome, FaSignOutAlt } from "react-icons/fa";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { SidebarButton } from "@/components/SidebarButton";
-import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useConfirmation } from "@/hooks/useConfirmDialog";
+import { useAuth } from "@/context/AuthContext";
+import { getInitials } from "@/lib/get-inisial";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { handleLogout: logout } = useLogout();
+
   const pathname = location.pathname;
 
   const { confirm } = useConfirmation();
@@ -27,8 +33,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     });
 
     if (isConfirmed) {
-      // Lakukan logout
-      console.log("User logout");
+      logout();
     }
   };
   return (
@@ -48,10 +53,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
           <div className="p-4">
             <div className="border flex items-center justify-center flex-col p-5 rounded-[5px]">
-              <span className="text-[100px] font-bold text-[#105E15]">AZ</span>
+              <span className="text-[100px] font-bold text-[#105E15]">{getInitials(user?.name || "Ahmad Zidni Hidayat")}</span>
               <div className="text-center">
-                <p className="font-semibold">Ahmad Zidni Hidayat</p>
-                <p>23106050077</p>
+                <p className="font-semibold">{user?.name || "Ahmad Zidni Hidayat"}</p>
+                <p>{user?.nim || "23106050077"}</p>
               </div>
             </div>
           </div>
@@ -92,11 +97,11 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </aside>
         <main className="flex-1 flex flex-col">{children}</main>
       </div>
-      {/* <footer className="bg-white shadow w-full p-4 text-center mt-5">
-        <p className="text-muted-foreground text-xs text-center">
+      <footer className="shadow w-full p-4 flex items-center justify-center mt-5">
+        <p className="text-muted-foreground text-xs ">
           Copyright © {new Date().getFullYear()} <span className="font-bold">PTIPD - UIN Sunan Kalijaga.</span> All rights reserved.
         </p>
-      </footer> */}
+      </footer>
     </>
   );
 };

@@ -1,14 +1,12 @@
-import { Alert } from "@/components/Alert";
-import { useAuth } from "@/context/AuthContext";
 import { createFileRoute } from "@tanstack/react-router";
+
+import { Alert } from "@/components/Alert";
 
 export const Route = createFileRoute("/(apps)/dash")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { user, status } = useAuth();
-  console.log(status);
   return (
     <>
       <header className="bg-white shadow  w-full">
@@ -37,7 +35,6 @@ function RouteComponent() {
             Selamat datang di Kartu Rencana Studi (KRS) UIN Sunan Kalijaga Yogyakarta.
           </p>
         </Alert>
-        {status == "pending" ? "Loading.." : JSON.stringify(user)}
       </div>
     </>
   );

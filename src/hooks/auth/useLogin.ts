@@ -1,36 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { login } from "@/api/login";
+import { useMutation } from "@tanstack/react-query";
 
 export const useLogin = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
+  const loginMutation = useMutation({
     mutationFn: async (credentials: { nim: string; password: string }) => {
-      // Simulate login API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Simulasi validasi credentials
-      if (credentials.nim === "A123456789" && credentials.password === "password") {
-        const userData = {
-          id: "12345",
-          name: "John Doe",
-          nim: "A123456789",
-        };
-
-        // Simulasi menyimpan token
-        localStorage.setItem("auth_token", "mock_jwt_token");
-
-        return userData;
-      } else {
-        throw new Error("Invalid credentials");
-      }
+      await login(credentials.nim, credentials.password);
     },
-    onSuccess: (userData) => {
-      queryClient.setQueryData(["auth"], userData);
+    onSuccess: () => {
+      window.location.reload();
     },
     onError: (error) => {
-      // Remove token jika login gagal
-      localStorage.removeItem("auth_token");
       console.error("Login failed:", error);
     },
   });
+
+  return loginMutation;
 };

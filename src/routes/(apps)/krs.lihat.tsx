@@ -1,4 +1,8 @@
 import { Alert } from "@/components/Alert";
+import { TabelInformasiUmum } from "@/components/tables/TabelInformasiUmum";
+import { TabelListMataKuliahYangDiambil } from "@/components/tables/TabelListMataKuliahYangDiambil";
+import { TabsList, Tabs, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(apps)/krs/lihat")({
@@ -14,7 +18,7 @@ function RouteComponent() {
         </nav>
       </header>
 
-      <div className="shadow flex-1  p-10 flex flex-col gap-5">
+      <div className="shadow flex-1  p-10 flex flex-col gap-5 bg-[#ecedf1]">
         <Alert>
           <p>
             Jika mengalami error silahkan disampaikan melalui{" "}
@@ -27,13 +31,60 @@ function RouteComponent() {
             </a>
           </p>
         </Alert>
-        <Alert>
-          <p>
-            Assalamu'alaikum wa rahmatullahi wa barakatuh, <b className="text-[#105E15]">Ahmad Zidni Hidayat</b>
-            <br />
-            Selamat datang di Kartu Rencana Studi (KRS) UIN Sunan Kalijaga Yogyakarta.
-          </p>
-        </Alert>
+        <Tabs defaultValue="informasiUmum">
+          <TabsList>
+            <TabsTrigger value="informasiUmum">Informasi Umum</TabsTrigger>
+          </TabsList>
+          <TabsContent value="informasiUmum">
+            <div className=" flex flex-col gap-5">
+              <TabelInformasiUmum
+                tahunAkademik="2025/2026"
+                semester="SEMESTER GANJIL"
+                ipk="4.00"
+                sksKumulatif="34"
+                ipsLalu="4.00"
+                jatahSks="24"
+                sksAmbil="0"
+                sisaSks="24"
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+        <Tabs defaultValue="daftarKelasMataKuliah">
+          <TabsList>
+            <TabsTrigger value="daftarKelasMataKuliah">Daftar Kelas Mata Kuliah</TabsTrigger>
+          </TabsList>
+          <TabsContent value="daftarKelasMataKuliah">
+            <div className=" flex flex-col gap-5">
+              <TabelListMataKuliahYangDiambil
+                mataKuliahyangDiambil={[
+                  {
+                    id: "1",
+                    kodeMataKuliah: "TIF101",
+                    nama: "Pemrograman Dasar",
+                    sks: 3,
+                    kelas: "A",
+                    dosenPengampu: [
+                      {
+                        nama: "Dr. Ahmad",
+                        nip: "1234567890",
+                      },
+                    ],
+                    jenis: "Wajib",
+                    kurikulumMataKuliah: "Kurikulum 2020",
+                    jadwal: [
+                      {
+                        hari: "Senin",
+                        waktu: "08:00 - 10:00",
+                        ruang: "Ruang 101",
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

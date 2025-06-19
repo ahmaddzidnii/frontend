@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { useAuth } from "@/context/AuthContext";
+import { LoaderFallback } from "@/components/LoaderFallback";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { Alert } from "@/components/Alert";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: RouteComponent,
@@ -23,7 +26,7 @@ function RouteComponent() {
   const { status } = useAuth();
 
   if (status === "pending") {
-    return <div className="p-4">Loading...</div>;
+    return <LoaderFallback className="h-screen" />;
   }
 
   if (status === "authenticated") {
@@ -60,19 +63,44 @@ function RouteComponent() {
 }
 
 function FormComponent() {
+  const { mutate, isPending, isError, error } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
+
+  const [data, setData] = useState({
+    nim: "",
+    password: "",
+  });
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!data.nim || !data.password) {
+      return;
+    }
+
+    mutate({
+      nim: data.nim,
+      password: data.password,
+    });
+  };
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
+      onSubmit={handleSubmit}
       className="flex flex-col gap-4"
     >
+      {isError && (
+        <Alert variant="error">
+          <div className="text-red-600">
+            <p className="text-sm">{(error as any).response?.data ? (error as any).response?.data.errors : "Terjadi kesalahan pada server!"}</p>
+          </div>
+        </Alert>
+      )}
+
       <div className="flex flex-col space-y-2">
         <label
           htmlFor="username"
@@ -83,6 +111,8 @@ function FormComponent() {
         <div className="relative flex items-center">
           <input
             id="username"
+            value={data.nim}
+            onChange={(e) => setData({ ...data, nim: e.target.value })}
             type="text"
             placeholder="Masukkan username Anda"
             className="flex h-10 w-full rounded-[5px] border border-gray-300  bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#105E15] pr-13"
@@ -111,6 +141,8 @@ function FormComponent() {
         <div className="relative flex items-center">
           <input
             id="password"
+            value={data.password}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
             type={showPassword ? "text" : "password"}
             placeholder="Masukkan password Anda"
             className="flex h-10 w-full rounded-[5px] border border-gray-300  bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#105E15] pr-20"
@@ -131,7 +163,13 @@ function FormComponent() {
         </div>
       </div>
 
-      <Button className="ml-auto">Login</Button>
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="ml-auto"
+      >
+        Login
+      </Button>
     </form>
   );
 }

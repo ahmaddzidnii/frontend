@@ -1,29 +1,29 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+
+import { logout } from "@/api/logout";
 
 export const useLogout = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
+  const logoutMutation = useMutation({
     mutationFn: async () => {
-      // Simulate logout API call (optional)
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Remove token
-      localStorage.removeItem("auth_token");
-
-      return true;
+      await logout();
     },
     onSuccess: () => {
-      // Clear auth cache
-      queryClient.setQueryData(["auth"], null);
-      queryClient.removeQueries({ queryKey: ["auth"] });
-
-      queryClient.clear();
+      window.location.reload();
     },
     onError: (error) => {
       console.error("Logout failed:", error);
-      localStorage.removeItem("auth_token");
-      queryClient.setQueryData(["auth"], null);
+      window.alert("Gagal keluar, silakan coba lagi.");
     },
   });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
+  return {
+    handleLogout,
+    isLoading: logoutMutation.isPending,
+    isError: logoutMutation.isError,
+    error: logoutMutation.error,
+  };
 };

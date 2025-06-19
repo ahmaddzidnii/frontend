@@ -5,7 +5,7 @@ import type { QueryKey } from "@tanstack/react-query";
  */
 export const authKeys = {
   all: ["auth"] as QueryKey,
-  me: () => [...authKeys.all, "me"] as QueryKey,
+  me: () => [...authKeys.all, "session"] as QueryKey,
 };
 
 /**
