@@ -4,9 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 export const useLogin = () => {
   const loginMutation = useMutation({
     mutationFn: async (credentials: { nim: string; password: string }) => {
-      await login(credentials.nim, credentials.password);
+      return await login(credentials.nim, credentials.password);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem("session_id", data.data.session_id);
       window.location.reload();
     },
     onError: (error) => {

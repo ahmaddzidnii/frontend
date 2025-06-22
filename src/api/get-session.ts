@@ -9,7 +9,11 @@ type GetSessionResponse = {
   };
 };
 
-export const getSessionData = async () => {
-  const session = await axiosInstance.get<GetSessionResponse>("/auth/session");
+export const getSessionData = async (sessionId: string) => {
+  const session = await axiosInstance.get<GetSessionResponse>("/auth/session", {
+    headers: {
+      Authorization: `Bearer ${sessionId}`,
+    },
+  });
   return session.data;
 };

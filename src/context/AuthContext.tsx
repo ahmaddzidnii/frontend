@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getSessionData } from "@/api/get-session";
 import { authKeys } from "@/lib/query-keys";
@@ -25,10 +25,15 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data: user, isLoading } = useQuery({
+  const sessionId = localStorage.getItem("session_id") || "";
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: authKeys.me(),
     queryFn: async () => {
-      const session = await getSessionData();
+      const session = await getSessionData(sessionId);
       return {
         id: session.data.id_mahasiswa,
         name: session.data.nama,
@@ -49,6 +54,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     status,
     user: user || null,
   };
+
+  useEffect(() => {
+    if (isError) {
+      localStorage.removeItem("session_id");
+    }
+  }, [isError]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

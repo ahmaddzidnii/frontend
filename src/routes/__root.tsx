@@ -1,7 +1,7 @@
 import { ConfirmationProvider } from "@/hooks/useConfirmDialog";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { HeadContent, Outlet, createRootRouteWithContext, redirect } from "@tanstack/react-router";
+import { HeadContent, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 
 import type { QueryClient } from "@tanstack/react-query";
 import type { AuthContextType } from "@/context/AuthContext";
@@ -20,14 +20,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <TanStackRouterDevtools />
     </ConfirmationProvider>
   ),
-  // beforeLoad: ({ context }) => {
-  //   if (context.auth.status === "unauthenticated") {
-  //     throw redirect({
-  //       to: "/login",
-  //       replace: true,
-  //     });
-  //   }
-  // },
+
   head: () => ({
     meta: [
       {
