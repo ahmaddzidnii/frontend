@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Alert } from "@/components/Alert";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/(apps)/dash")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { user } = useAuth();
   return (
     <>
       <header className="bg-white shadow  w-full">
@@ -30,7 +32,11 @@ function RouteComponent() {
         </Alert>
         <Alert>
           <p>
-            Assalamu'alaikum wa rahmatullahi wa barakatuh, <b className="text-[#105E15]">Ahmad Zidni Hidayat</b>
+            Assalamu'alaikum wa rahmatullahi wa barakatuh,
+            <b className="text-[#105E15]">
+              &nbsp;
+              {user?.name.toLowerCase().replace(/\b(\w)/g, (x) => x.toUpperCase())}
+            </b>
             <br />
             Selamat datang di Kartu Rencana Studi (KRS) UIN Sunan Kalijaga Yogyakarta.
           </p>

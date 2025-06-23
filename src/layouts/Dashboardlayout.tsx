@@ -55,7 +55,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <div className="border flex items-center justify-center flex-col p-5 rounded-[5px]">
               <span className="text-[100px] font-bold text-[#105E15]">{getInitials(user?.name || "Ahmad Zidni Hidayat")}</span>
               <div className="text-center">
-                <p className="font-semibold">{user?.name || "Ahmad Zidni Hidayat"}</p>
+                <p className="font-semibold uppercase">{user?.name || "Ahmad Zidni Hidayat"}</p>
                 <p>{user?.nim || "23106050077"}</p>
               </div>
             </div>

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { useAuth } from "@/context/AuthContext";
-import { LoaderFallback } from "@/components/LoaderFallback";
+// import { LoaderFallback } from "@/components/LoaderFallback";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { Alert } from "@/components/Alert";
 
@@ -24,10 +24,6 @@ export const Route = createFileRoute("/(auth)/login")({
 
 function RouteComponent() {
   const { status } = useAuth();
-
-  if (status === "pending") {
-    return <LoaderFallback className="h-screen" />;
-  }
 
   if (status === "authenticated") {
     return <Navigate to="/dash" />;

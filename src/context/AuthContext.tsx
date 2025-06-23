@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getSessionData } from "@/api/get-session";
 import { authKeys } from "@/lib/query-keys";
 
@@ -25,41 +25,32 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const sessionId = localStorage.getItem("session_id") || "";
-  const {
-    data: user,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data, isLoading } = useSuspenseQuery({
     queryKey: authKeys.me(),
     queryFn: async () => {
-      const session = await getSessionData(sessionId);
-      return {
-        id: session.data.id_mahasiswa,
-        name: session.data.nama,
-        nim: session.data.nim,
-      };
+      const session = await getSessionData();
+      return session;
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const status = React.useMemo(() => {
-    if (isLoading) return "pending";
-    if (user) return "authenticated";
+    if (data) return "authenticated";
     return "unauthenticated";
-  }, [isLoading, user]);
+  }, [data]);
 
   const value: AuthContextType = {
     status,
-    user: user || null,
+    user: data,
   };
 
   useEffect(() => {
-    if (isError) {
+    if (!data) {
       localStorage.removeItem("session_id");
     }
-  }, [isError]);
+  }, [data]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

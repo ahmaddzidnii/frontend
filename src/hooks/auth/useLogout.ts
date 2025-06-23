@@ -3,10 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import { logout } from "@/api/logout";
 
 export const useLogout = () => {
-  const sessionId = window.localStorage.getItem("session_id") || "";
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await logout(sessionId);
+      await logout();
     },
     onSuccess: () => {
       window.localStorage.removeItem("session_id");
