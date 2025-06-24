@@ -25,7 +25,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data, isLoading } = useSuspenseQuery({
+  const { data } = useSuspenseQuery({
     queryKey: authKeys.me(),
     queryFn: async () => {
       const session = await getSessionData();
