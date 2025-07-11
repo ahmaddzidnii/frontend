@@ -1,15 +1,16 @@
+import { z } from "zod";
 import { useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
 
 import { Logo } from "@/components/Logo";
+import { Alert } from "@/components/Alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AuthLayout } from "@/layouts/AuthLayout";
 import { useAuth } from "@/context/AuthContext";
 import { useLogin } from "@/hooks/auth/useLogin";
-import { Alert } from "@/components/Alert";
+import { AuthLayout } from "@/layouts/AuthLayout";
 import { AxiosResponseError, getErrorMessage } from "@/lib/errors";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: RouteComponent,
@@ -64,52 +65,76 @@ function RouteComponent() {
   );
 }
 
-function FormComponent() {
+// 1. Definisikan Skema Validasi dengan Zod
+const loginSchema = z.object({
+  nim: z.string().min(1, "Username tidak boleh kosong."),
+  password: z.string().min(1, "Password tidak boleh kosong."),
+});
+
+// Ekstrak tipe data dari skema untuk keamanan tipe
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+export function FormComponent() {
   const { mutate, isPending, isError, error } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
-  const [data, setData] = useState({
+  const [data, setData] = useState<LoginFormValues>({
     nim: "",
     password: "",
   });
+
+  // 2. State untuk menampung error validasi dari Zod
+  const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof LoginFormValues, string>>>({});
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setData({ ...data, [id]: value });
+    // Hapus error untuk field yang sedang diubah untuk UX yang lebih baik
+    if (validationErrors[id as keyof LoginFormValues]) {
+      setValidationErrors({ ...validationErrors, [id]: undefined });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!data.nim || !data.password) {
+    // 3. Lakukan validasi menggunakan Zod
+    const result = loginSchema.safeParse(data);
+
+    // Jika validasi gagal, tampilkan error
+    if (!result.success) {
+      const formattedErrors: Partial<Record<keyof LoginFormValues, string>> = {};
+      result.error.issues.forEach((issue) => {
+        formattedErrors[issue.path[0] as keyof LoginFormValues] = issue.message;
+      });
+      setValidationErrors(formattedErrors);
       return;
     }
 
-    mutate({
-      nim: data.nim,
-      password: data.password,
-    });
+    // Jika validasi berhasil, hapus error lama dan kirim data
+    setValidationErrors({});
+    mutate(result.data);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4"
+      noValidate // Mencegah validasi bawaan browser
     >
+      {/* Penanganan error dari server (setelah submit) */}
       {isError && (
         <Alert variant="error">
           <div className="flex flex-col gap-1 text-red-600">
-            {/* 1. Tampilkan pesan error utama menggunakan helper */}
-            <p className="text-sm">{getErrorMessage(error)}</p>
-
-            {/* 2. Cek apakah errornya adalah AxiosResponseError dan punya data validasi */}
+            <p className="text-sm font-semibold">{getErrorMessage(error)}</p>
             {error instanceof AxiosResponseError && error.data && (
               <ul className="list-disc pl-5 text-sm">
-                {/* Ubah objek validation_errors menjadi list */}
                 {Object.entries(error.data as Record<string, string[]>).map(([field, messages]) => (
-                  <li key={field}>
-                    {/* Gabungkan pesan jika ada lebih dari satu untuk satu field */}
-                    {Array.isArray(messages) ? messages.join(", ") : messages}
-                  </li>
+                  <li key={field}>{Array.isArray(messages) ? messages.join(", ") : messages}</li>
                 ))}
               </ul>
             )}
@@ -117,29 +142,34 @@ function FormComponent() {
         </Alert>
       )}
 
-      <div className="flex flex-col space-y-2">
+      {/* Input Username */}
+      <div className="flex flex-col space-y-1">
         <label
-          htmlFor="username"
+          htmlFor="nim"
           className="text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Username
         </label>
         <div className="relative flex items-center">
           <input
-            id="username"
+            id="nim"
             value={data.nim}
-            onChange={(e) => setData({ ...data, nim: e.target.value })}
+            onChange={handleInputChange}
             type="text"
             placeholder="Masukkan username Anda"
-            className="flex h-10 w-full rounded-[5px] border border-gray-300  bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#105E15] pr-13"
+            className={`flex h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 pr-13 ${
+              validationErrors.nim ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-[#105E15]"
+            }`}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center px-3 border rounded-e-[5px]  pointer-events-none bg-[#EAEBEC]">
+          <div className="absolute inset-y-0 right-0 flex items-center px-3 border rounded-e-[5px] pointer-events-none bg-[#EAEBEC]">
             <UserIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
+        {validationErrors.nim && <p className="text-sm text-red-600 mt-1">{validationErrors.nim}</p>}
       </div>
 
-      <div className="space-y-2">
+      {/* Input Password */}
+      <div className="space-y-1">
         <div className="flex items-center justify-between">
           <label
             htmlFor="password"
@@ -158,25 +188,28 @@ function FormComponent() {
           <input
             id="password"
             value={data.password}
-            onChange={(e) => setData({ ...data, password: e.target.value })}
+            onChange={handleInputChange}
             type={showPassword ? "text" : "password"}
             placeholder="Masukkan password Anda"
-            className="flex h-10 w-full rounded-[5px] border border-gray-300  bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#105E15] pr-20"
+            className={`flex h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 pr-20 ${
+              validationErrors.password ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-[#105E15]"
+            }`}
           />
           <div className="absolute inset-y-0 right-10 flex items-center pr-3">
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="p-1.5 rounded-full hover:bg-gray-200 "
+              className="p-1.5 rounded-full hover:bg-gray-200"
               aria-label="Toggle password visibility"
             >
               {showPassword ? <EyeOffIcon className="h-5 w-5 text-gray-500" /> : <EyeIcon className="h-5 w-5 text-gray-500" />}
             </button>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center border rounded-e-[5px]  px-3 bg-[#EAEBEC]">
-            <LockIcon className="h-5 w-5 text-gray-400  pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 flex items-center border rounded-e-[5px] px-3 bg-[#EAEBEC] pointer-events-none">
+            <LockIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
+        {validationErrors.password && <p className="text-sm text-red-600 mt-1">{validationErrors.password}</p>}
       </div>
 
       <Button
@@ -184,7 +217,7 @@ function FormComponent() {
         disabled={isPending}
         className="ml-auto"
       >
-        Login
+        {isPending ? "Loading..." : "Login"}
       </Button>
     </form>
   );

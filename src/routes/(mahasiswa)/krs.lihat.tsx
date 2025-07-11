@@ -1,13 +1,61 @@
 import { Alert } from "@/components/Alert";
+import { Spinner } from "@/components/Spinner";
 import { TabelInformasiUmum } from "@/components/tables/TabelInformasiUmum";
 import { TabelListMataKuliahYangDiambil } from "@/components/tables/TabelListMataKuliahYangDiambil";
 import { TabsList, Tabs, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { informasiUmumMhsOptions } from "@/queries/mahasiswa";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { MdError } from "react-icons/md";
 
 export const Route = createFileRoute("/(mahasiswa)/krs/lihat")({
   component: RouteComponent,
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.prefetchQuery(informasiUmumMhsOptions);
+  },
 });
+
+const InformasiUmumSection = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-[176px]">
+          <Spinner />
+        </div>
+      }
+    >
+      <ErrorBoundary
+        fallback={
+          <div className="flex items-center justify-center h-[176px]">
+            <MdError className="mr-2" />
+            Gagal melakukan load pada data informasi umum mahasiswa.
+          </div>
+        }
+      >
+        <InformasiUmumSectionSuspense />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
+
+const InformasiUmumSectionSuspense = () => {
+  const { data } = useSuspenseQuery(informasiUmumMhsOptions);
+  return (
+    <TabelInformasiUmum
+      tahunAkademik={data.tahun_akademik || "Tahun Akademik Tidak Tersedia"}
+      semester={data.semester || "Semester Tidak Tersedia"}
+      ipk={data.ipk?.toFixed(2) || "IPK Tidak Tersedia"}
+      sksKumulatif={data.sks_kumulatif?.toString() || "SKS Kumulatif Tidak Tersedia"}
+      ipsLalu={data.ips_lalu?.toFixed(2) || "IPS Lalu Tidak Tersedia"}
+      jatahSks={data.jatah_sks?.toString() || "Jatah SKS Tidak Tersedia"}
+      sksAmbil={data.sks_ambil.toString() || "SKS Ambil Tidak Tersedia"}
+      sisaSks={data.sisa_sks?.toString() || "Sisa SKS Tidak Tersedia"}
+    />
+  );
+};
 
 function RouteComponent() {
   return (
@@ -37,16 +85,7 @@ function RouteComponent() {
           </TabsList>
           <TabsContent value="informasiUmum">
             <div className=" flex flex-col gap-5">
-              <TabelInformasiUmum
-                tahunAkademik="2025/2026"
-                semester="SEMESTER GANJIL"
-                ipk="4.00"
-                sksKumulatif="34"
-                ipsLalu="4.00"
-                jatahSks="24"
-                sksAmbil="0"
-                sisaSks="24"
-              />
+              <InformasiUmumSection />
             </div>
           </TabsContent>
         </Tabs>

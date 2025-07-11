@@ -1,13 +1,16 @@
-import { getSyaratPengisianKrs } from "@/api/get-syarat-pengisisan-krs";
-import { Spinner } from "@/components/Spinner";
-import { syaratPengisianKrsKeys } from "@/lib/query-keys";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-
 import { MdError } from "react-icons/md";
+import { Suspense, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const TableSyaratPengisianKrs = () => {
+import { Spinner } from "@/components/Spinner";
+import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
+
+interface SyaratPengisianKrsType {
+  onSyaratPengisisanKrsEnabled?: (enabled: boolean) => void;
+}
+
+export const TableSyaratPengisianKrs = ({ onSyaratPengisisanKrsEnabled }: SyaratPengisianKrsType) => {
   return (
     <Suspense
       fallback={
@@ -24,18 +27,21 @@ export const TableSyaratPengisianKrs = () => {
           </div>
         }
       >
-        <TableSyaratPengisianKrsSuspense />
+        <TableSyaratPengisianKrsSuspense onSyaratPengisisanKrsEnabled={onSyaratPengisisanKrsEnabled} />
       </ErrorBoundary>
     </Suspense>
   );
 };
 
-export const TableSyaratPengisianKrsSuspense = () => {
-  const { data: syaratKrs } = useSuspenseQuery({
-    queryKey: syaratPengisianKrsKeys["get"],
-    queryFn: getSyaratPengisianKrs,
-    staleTime: 1000 * 60,
-  });
+export const TableSyaratPengisianKrsSuspense = ({ onSyaratPengisisanKrsEnabled }: SyaratPengisianKrsType) => {
+  const { data: syaratKrs } = useSuspenseQuery(syaratPengisianKrsOptions);
+
+  useEffect(() => {
+    // Pastikan prop callback ada sebelum memanggilnya
+    if (onSyaratPengisisanKrsEnabled) {
+      onSyaratPengisisanKrsEnabled(syaratKrs.pengisisan_krs_enabled);
+    }
+  }, [syaratKrs.pengisisan_krs_enabled, onSyaratPengisisanKrsEnabled]);
 
   return (
     <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>

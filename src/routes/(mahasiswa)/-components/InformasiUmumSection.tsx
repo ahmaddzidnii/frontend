@@ -1,14 +1,10 @@
-import { getInformasiUmumMhs } from "@/api/get-informasi-umum-mhs";
 import { Spinner } from "@/components/Spinner";
 import { TabelInformasiUmum } from "@/components/tables/TabelInformasiUmum";
+import { informasiUmumMhsOptions } from "@/queries/mahasiswa";
 import { useQuery } from "@tanstack/react-query";
 
 export const InformasiUmumSection = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["informasi-umum-mhs"],
-    queryFn: getInformasiUmumMhs,
-    staleTime: 1000 * 60 * 1, // 1 minute
-  });
+  const { data, isLoading, isError } = useQuery(informasiUmumMhsOptions);
 
   if (isLoading) {
     return (
