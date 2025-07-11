@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Alert } from "@/components/Alert";
 import { useAuth } from "@/context/AuthContext";
 
-export const Route = createFileRoute("/(apps)/dash")({
+export const Route = createFileRoute("/(mahasiswa)/dash")({
   component: RouteComponent,
 });
 
@@ -16,7 +16,6 @@ function RouteComponent() {
           <span className="text-xl">Dashboard</span>
         </nav>
       </header>
-
       <div className="shadow flex-1  p-10 flex flex-col gap-5 bg-[#ecedf1]">
         <Alert>
           <p>
@@ -43,5 +42,5 @@ function RouteComponent() {
         </Alert>
       </div>
     </>
-  );
+  )
 }

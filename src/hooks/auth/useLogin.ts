@@ -1,4 +1,5 @@
 import { login } from "@/api/login";
+
 import { useMutation } from "@tanstack/react-query";
 
 export const useLogin = () => {
@@ -7,7 +8,7 @@ export const useLogin = () => {
       return await login(credentials.nim, credentials.password);
     },
     onSuccess: (data) => {
-      localStorage.setItem("session_id", data.data.session_id);
+      localStorage.setItem("session_id", data.session_id);
       window.location.reload();
     },
     onError: (error) => {

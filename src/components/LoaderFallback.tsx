@@ -8,7 +8,7 @@ export const LoaderFallback = ({ className }: LoaderFallbackProps) => {
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <svg
-        className="size-10"
+        className="size-10 fill-[#105E15]"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >

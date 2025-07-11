@@ -4,9 +4,7 @@ import { logout } from "@/api/logout";
 
 export const useLogout = () => {
   const logoutMutation = useMutation({
-    mutationFn: async () => {
-      await logout();
-    },
+    mutationFn: logout,
     onSuccess: () => {
       window.localStorage.removeItem("session_id");
       window.location.reload();

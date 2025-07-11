@@ -16,3 +16,7 @@ export const userKeys = {
   list: () => [...userKeys.all, "list"] as QueryKey,
   detail: (id: string | number) => [...userKeys.all, "detail", id] as QueryKey,
 };
+
+export const syaratPengisianKrsKeys = {
+  get: ["get-syarat-pengisian-krs"],
+};

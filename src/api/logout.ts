@@ -1,7 +1,9 @@
-import { axiosInstance } from "@/lib/axios";
+import { apiClient } from "@/lib/api-client";
 
 export const logout = async () => {
-  const response = await axiosInstance.post("/auth/logout", undefined, {});
-
-  return response.data;
+  return apiClient<any>({
+    method: "POST",
+    url: "auth/logout",
+    expectsData: false,
+  });
 };

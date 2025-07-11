@@ -5,7 +5,7 @@ import { TabsList, Tabs, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(apps)/krs/lihat")({
+export const Route = createFileRoute("/(mahasiswa)/krs/lihat")({
   component: RouteComponent,
 });
 

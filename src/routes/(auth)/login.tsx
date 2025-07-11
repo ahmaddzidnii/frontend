@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { useAuth } from "@/context/AuthContext";
-// import { LoaderFallback } from "@/components/LoaderFallback";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { Alert } from "@/components/Alert";
+import { AxiosResponseError, getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: RouteComponent,
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/(auth)/login")({
 });
 
 function RouteComponent() {
-  const { status } = useAuth();
+  const { status, isDalamJadwal } = useAuth();
 
   if (status === "authenticated") {
     return <Navigate to="/dash" />;
@@ -47,7 +47,13 @@ function RouteComponent() {
                 </a>
               </div>
             </CardHeader>
-            <FormComponent />
+            {isDalamJadwal ? (
+              <FormComponent />
+            ) : (
+              <div className="rounded-[5px] bg-[#FEE2E2] text-red-600 font-semibold p-5 text-center">
+                <p className="text-sm">Aplikasi KRS ditutup, silahkan mengisi KRS pada jadwal yang sudah ditentukan.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         <p className="text-muted-foreground text-xs text-center">
@@ -91,8 +97,22 @@ function FormComponent() {
     >
       {isError && (
         <Alert variant="error">
-          <div className="text-red-600">
-            <p className="text-sm">{(error as any).response?.data ? (error as any).response?.data.errors : "Terjadi kesalahan pada server!"}</p>
+          <div className="flex flex-col gap-1 text-red-600">
+            {/* 1. Tampilkan pesan error utama menggunakan helper */}
+            <p className="text-sm">{getErrorMessage(error)}</p>
+
+            {/* 2. Cek apakah errornya adalah AxiosResponseError dan punya data validasi */}
+            {error instanceof AxiosResponseError && error.data && (
+              <ul className="list-disc pl-5 text-sm">
+                {/* Ubah objek validation_errors menjadi list */}
+                {Object.entries(error.data as Record<string, string[]>).map(([field, messages]) => (
+                  <li key={field}>
+                    {/* Gabungkan pesan jika ada lebih dari satu untuk satu field */}
+                    {Array.isArray(messages) ? messages.join(", ") : messages}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </Alert>
       )}

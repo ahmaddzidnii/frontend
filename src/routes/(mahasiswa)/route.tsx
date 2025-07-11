@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { DashboardLayout } from "@/layouts/Dashboardlayout";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(apps)")({
+export const Route = createFileRoute("/(mahasiswa)")({
   component: RouteComponent,
 });
 

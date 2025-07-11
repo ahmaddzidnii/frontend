@@ -1,13 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-
 import { Alert } from "@/components/Alert";
 import { TabelInformasiUmum } from "@/components/tables/TabelInformasiUmum";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { createFileRoute } from "@tanstack/react-router";
 import { FaSync } from "react-icons/fa";
 import { FaExclamation, FaListCheck, FaPlus, FaTrash } from "react-icons/fa6";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const Route = createFileRoute("/(apps)/krs/pengisian")({
+export const Route = createFileRoute("/petugas/lihatkelas")({
   component: RouteComponent,
 });
 
@@ -16,7 +15,7 @@ function RouteComponent() {
     <>
       <header className="bg-white shadow  w-full">
         <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15] ">
-          <span className="text-xl">Pengisian Kartu Rencana Studi</span>
+          <span className="text-xl">Input Kelas</span>
         </nav>
       </header>
 
@@ -37,7 +36,7 @@ function RouteComponent() {
         {/* Syarat Pengisisan */}
         <Tabs defaultValue="syaratPengisian">
           <TabsList>
-            <TabsTrigger value="syaratPengisian">Syarat Pengisian</TabsTrigger>
+            <TabsTrigger value="syaratPengisian">List Tahun Akademeik</TabsTrigger>
           </TabsList>
           <TabsContent value="syaratPengisian">
             <div className="flex flex-col">

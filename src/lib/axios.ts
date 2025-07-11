@@ -1,9 +1,21 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    /**
+     * Jika true, apiClient akan melempar error jika `data` dari respons adalah null.
+     * Setel ke false untuk aksi seperti logout atau delete.
+     * @default true
+     */
+    expectsData?: boolean;
+  }
+}
+
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:1001",
   timeout: 10000,
   withCredentials: true,
+  adapter: "fetch",
 });
 
 axiosInstance.interceptors.request.use(

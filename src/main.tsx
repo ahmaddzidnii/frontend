@@ -9,7 +9,13 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 1, // 1 minute
+    },
+  },
+});
 
 // Create a new router instance
 const router = createRouter({

@@ -9,15 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as appsRouteRouteImport } from './routes/(apps)/route'
+import { Route as PetugasRouteRouteImport } from './routes/petugas/route'
+import { Route as mahasiswaRouteRouteImport } from './routes/(mahasiswa)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PetugasIndexRouteImport } from './routes/petugas/index'
+import { Route as PetugasLihatkelasRouteImport } from './routes/petugas/lihatkelas'
+import { Route as PetugasInputkelasRouteImport } from './routes/petugas/inputkelas'
+import { Route as PetugasDashRouteImport } from './routes/petugas/dash'
+import { Route as mahasiswaDashRouteImport } from './routes/(mahasiswa)/dash'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as appsDashRouteImport } from './routes/(apps)/dash'
-import { Route as appsKrsPengisianRouteImport } from './routes/(apps)/krs.pengisian'
-import { Route as appsKrsLihatRouteImport } from './routes/(apps)/krs.lihat'
+import { Route as mahasiswaKrsPengisianRouteImport } from './routes/(mahasiswa)/krs.pengisian'
+import { Route as mahasiswaKrsLihatRouteImport } from './routes/(mahasiswa)/krs.lihat'
 
-const appsRouteRoute = appsRouteRouteImport.update({
-  id: '/(apps)',
+const PetugasRouteRoute = PetugasRouteRouteImport.update({
+  id: '/petugas',
+  path: '/petugas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const mahasiswaRouteRoute = mahasiswaRouteRouteImport.update({
+  id: '/(mahasiswa)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,78 +35,144 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PetugasIndexRoute = PetugasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PetugasRouteRoute,
+} as any)
+const PetugasLihatkelasRoute = PetugasLihatkelasRouteImport.update({
+  id: '/lihatkelas',
+  path: '/lihatkelas',
+  getParentRoute: () => PetugasRouteRoute,
+} as any)
+const PetugasInputkelasRoute = PetugasInputkelasRouteImport.update({
+  id: '/inputkelas',
+  path: '/inputkelas',
+  getParentRoute: () => PetugasRouteRoute,
+} as any)
+const PetugasDashRoute = PetugasDashRouteImport.update({
+  id: '/dash',
+  path: '/dash',
+  getParentRoute: () => PetugasRouteRoute,
+} as any)
+const mahasiswaDashRoute = mahasiswaDashRouteImport.update({
+  id: '/dash',
+  path: '/dash',
+  getParentRoute: () => mahasiswaRouteRoute,
+} as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const appsDashRoute = appsDashRouteImport.update({
-  id: '/dash',
-  path: '/dash',
-  getParentRoute: () => appsRouteRoute,
-} as any)
-const appsKrsPengisianRoute = appsKrsPengisianRouteImport.update({
+const mahasiswaKrsPengisianRoute = mahasiswaKrsPengisianRouteImport.update({
   id: '/krs/pengisian',
   path: '/krs/pengisian',
-  getParentRoute: () => appsRouteRoute,
+  getParentRoute: () => mahasiswaRouteRoute,
 } as any)
-const appsKrsLihatRoute = appsKrsLihatRouteImport.update({
+const mahasiswaKrsLihatRoute = mahasiswaKrsLihatRouteImport.update({
   id: '/krs/lihat',
   path: '/krs/lihat',
-  getParentRoute: () => appsRouteRoute,
+  getParentRoute: () => mahasiswaRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof appsRouteRouteWithChildren
-  '/dash': typeof appsDashRoute
+  '/': typeof mahasiswaRouteRouteWithChildren
+  '/petugas': typeof PetugasRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/krs/lihat': typeof appsKrsLihatRoute
-  '/krs/pengisian': typeof appsKrsPengisianRoute
+  '/dash': typeof mahasiswaDashRoute
+  '/petugas/dash': typeof PetugasDashRoute
+  '/petugas/inputkelas': typeof PetugasInputkelasRoute
+  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
+  '/petugas/': typeof PetugasIndexRoute
+  '/krs/lihat': typeof mahasiswaKrsLihatRoute
+  '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof appsRouteRouteWithChildren
-  '/dash': typeof appsDashRoute
+  '/': typeof mahasiswaRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/krs/lihat': typeof appsKrsLihatRoute
-  '/krs/pengisian': typeof appsKrsPengisianRoute
+  '/dash': typeof mahasiswaDashRoute
+  '/petugas/dash': typeof PetugasDashRoute
+  '/petugas/inputkelas': typeof PetugasInputkelasRoute
+  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
+  '/petugas': typeof PetugasIndexRoute
+  '/krs/lihat': typeof mahasiswaKrsLihatRoute
+  '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/(apps)': typeof appsRouteRouteWithChildren
-  '/(apps)/dash': typeof appsDashRoute
+  '/(mahasiswa)': typeof mahasiswaRouteRouteWithChildren
+  '/petugas': typeof PetugasRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
-  '/(apps)/krs/lihat': typeof appsKrsLihatRoute
-  '/(apps)/krs/pengisian': typeof appsKrsPengisianRoute
+  '/(mahasiswa)/dash': typeof mahasiswaDashRoute
+  '/petugas/dash': typeof PetugasDashRoute
+  '/petugas/inputkelas': typeof PetugasInputkelasRoute
+  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
+  '/petugas/': typeof PetugasIndexRoute
+  '/(mahasiswa)/krs/lihat': typeof mahasiswaKrsLihatRoute
+  '/(mahasiswa)/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dash' | '/login' | '/krs/lihat' | '/krs/pengisian'
+  fullPaths:
+    | '/'
+    | '/petugas'
+    | '/login'
+    | '/dash'
+    | '/petugas/dash'
+    | '/petugas/inputkelas'
+    | '/petugas/lihatkelas'
+    | '/petugas/'
+    | '/krs/lihat'
+    | '/krs/pengisian'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dash' | '/login' | '/krs/lihat' | '/krs/pengisian'
+  to:
+    | '/'
+    | '/login'
+    | '/dash'
+    | '/petugas/dash'
+    | '/petugas/inputkelas'
+    | '/petugas/lihatkelas'
+    | '/petugas'
+    | '/krs/lihat'
+    | '/krs/pengisian'
   id:
     | '__root__'
     | '/'
-    | '/(apps)'
-    | '/(apps)/dash'
+    | '/(mahasiswa)'
+    | '/petugas'
     | '/(auth)/login'
-    | '/(apps)/krs/lihat'
-    | '/(apps)/krs/pengisian'
+    | '/(mahasiswa)/dash'
+    | '/petugas/dash'
+    | '/petugas/inputkelas'
+    | '/petugas/lihatkelas'
+    | '/petugas/'
+    | '/(mahasiswa)/krs/lihat'
+    | '/(mahasiswa)/krs/pengisian'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  appsRouteRoute: typeof appsRouteRouteWithChildren
+  mahasiswaRouteRoute: typeof mahasiswaRouteRouteWithChildren
+  PetugasRouteRoute: typeof PetugasRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(apps)': {
-      id: '/(apps)'
+    '/petugas': {
+      id: '/petugas'
+      path: '/petugas'
+      fullPath: '/petugas'
+      preLoaderRoute: typeof PetugasRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(mahasiswa)': {
+      id: '/(mahasiswa)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof appsRouteRouteImport
+      preLoaderRoute: typeof mahasiswaRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -106,6 +182,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/petugas/': {
+      id: '/petugas/'
+      path: '/'
+      fullPath: '/petugas/'
+      preLoaderRoute: typeof PetugasIndexRouteImport
+      parentRoute: typeof PetugasRouteRoute
+    }
+    '/petugas/lihatkelas': {
+      id: '/petugas/lihatkelas'
+      path: '/lihatkelas'
+      fullPath: '/petugas/lihatkelas'
+      preLoaderRoute: typeof PetugasLihatkelasRouteImport
+      parentRoute: typeof PetugasRouteRoute
+    }
+    '/petugas/inputkelas': {
+      id: '/petugas/inputkelas'
+      path: '/inputkelas'
+      fullPath: '/petugas/inputkelas'
+      preLoaderRoute: typeof PetugasInputkelasRouteImport
+      parentRoute: typeof PetugasRouteRoute
+    }
+    '/petugas/dash': {
+      id: '/petugas/dash'
+      path: '/dash'
+      fullPath: '/petugas/dash'
+      preLoaderRoute: typeof PetugasDashRouteImport
+      parentRoute: typeof PetugasRouteRoute
+    }
+    '/(mahasiswa)/dash': {
+      id: '/(mahasiswa)/dash'
+      path: '/dash'
+      fullPath: '/dash'
+      preLoaderRoute: typeof mahasiswaDashRouteImport
+      parentRoute: typeof mahasiswaRouteRoute
+    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -113,49 +224,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(apps)/dash': {
-      id: '/(apps)/dash'
-      path: '/dash'
-      fullPath: '/dash'
-      preLoaderRoute: typeof appsDashRouteImport
-      parentRoute: typeof appsRouteRoute
-    }
-    '/(apps)/krs/pengisian': {
-      id: '/(apps)/krs/pengisian'
+    '/(mahasiswa)/krs/pengisian': {
+      id: '/(mahasiswa)/krs/pengisian'
       path: '/krs/pengisian'
       fullPath: '/krs/pengisian'
-      preLoaderRoute: typeof appsKrsPengisianRouteImport
-      parentRoute: typeof appsRouteRoute
+      preLoaderRoute: typeof mahasiswaKrsPengisianRouteImport
+      parentRoute: typeof mahasiswaRouteRoute
     }
-    '/(apps)/krs/lihat': {
-      id: '/(apps)/krs/lihat'
+    '/(mahasiswa)/krs/lihat': {
+      id: '/(mahasiswa)/krs/lihat'
       path: '/krs/lihat'
       fullPath: '/krs/lihat'
-      preLoaderRoute: typeof appsKrsLihatRouteImport
-      parentRoute: typeof appsRouteRoute
+      preLoaderRoute: typeof mahasiswaKrsLihatRouteImport
+      parentRoute: typeof mahasiswaRouteRoute
     }
   }
 }
 
-interface appsRouteRouteChildren {
-  appsDashRoute: typeof appsDashRoute
-  appsKrsLihatRoute: typeof appsKrsLihatRoute
-  appsKrsPengisianRoute: typeof appsKrsPengisianRoute
+interface mahasiswaRouteRouteChildren {
+  mahasiswaDashRoute: typeof mahasiswaDashRoute
+  mahasiswaKrsLihatRoute: typeof mahasiswaKrsLihatRoute
+  mahasiswaKrsPengisianRoute: typeof mahasiswaKrsPengisianRoute
 }
 
-const appsRouteRouteChildren: appsRouteRouteChildren = {
-  appsDashRoute: appsDashRoute,
-  appsKrsLihatRoute: appsKrsLihatRoute,
-  appsKrsPengisianRoute: appsKrsPengisianRoute,
+const mahasiswaRouteRouteChildren: mahasiswaRouteRouteChildren = {
+  mahasiswaDashRoute: mahasiswaDashRoute,
+  mahasiswaKrsLihatRoute: mahasiswaKrsLihatRoute,
+  mahasiswaKrsPengisianRoute: mahasiswaKrsPengisianRoute,
 }
 
-const appsRouteRouteWithChildren = appsRouteRoute._addFileChildren(
-  appsRouteRouteChildren,
+const mahasiswaRouteRouteWithChildren = mahasiswaRouteRoute._addFileChildren(
+  mahasiswaRouteRouteChildren,
+)
+
+interface PetugasRouteRouteChildren {
+  PetugasDashRoute: typeof PetugasDashRoute
+  PetugasInputkelasRoute: typeof PetugasInputkelasRoute
+  PetugasLihatkelasRoute: typeof PetugasLihatkelasRoute
+  PetugasIndexRoute: typeof PetugasIndexRoute
+}
+
+const PetugasRouteRouteChildren: PetugasRouteRouteChildren = {
+  PetugasDashRoute: PetugasDashRoute,
+  PetugasInputkelasRoute: PetugasInputkelasRoute,
+  PetugasLihatkelasRoute: PetugasLihatkelasRoute,
+  PetugasIndexRoute: PetugasIndexRoute,
+}
+
+const PetugasRouteRouteWithChildren = PetugasRouteRoute._addFileChildren(
+  PetugasRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  appsRouteRoute: appsRouteRouteWithChildren,
+  mahasiswaRouteRoute: mahasiswaRouteRouteWithChildren,
+  PetugasRouteRoute: PetugasRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport

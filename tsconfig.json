@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "src/routes/(apps)/krs.lihat"],
+  "include": ["**/*.ts", "**/*.tsx", "src/routes/(mahasiswa)/krs.lihat"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
