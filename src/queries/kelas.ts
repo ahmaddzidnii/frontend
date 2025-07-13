@@ -1,5 +1,5 @@
 import { getDaftarPenawaranKelas } from "@/api/get-daftar-penawaran-kelas";
-import { getStatusKoutaKelas } from "@/api/get-status-kouta-kelas";
+import { getStatusKoutaKelas, getStatusKoutaKelasBatch } from "@/api/get-status-kouta-kelas";
 import { queryOptions } from "@tanstack/react-query";
 
 export const getDaftarPenawaranKelasOptions = queryOptions({
@@ -12,6 +12,14 @@ export const getStatusKoutaKelasOptions = (id_kelas: string) =>
   queryOptions({
     queryKey: ["status-kouta-kelas", id_kelas],
     queryFn: () => getStatusKoutaKelas(id_kelas),
+    staleTime: 1000 * 60 * 1,
+    retry: 1,
+  });
+
+export const getStatusKoutaKelasBatchOptions = (id_kelas: string[]) =>
+  queryOptions({
+    queryKey: ["status-kouta-kelas", id_kelas],
+    queryFn: () => getStatusKoutaKelasBatch(id_kelas),
     staleTime: 1000 * 60 * 1,
     retry: 1,
   });

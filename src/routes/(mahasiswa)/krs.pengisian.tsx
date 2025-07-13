@@ -9,7 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TableSyaratPengisianKrs } from "./-components/TableSyaratPengisianKrs";
 import { InformasiUmumSection } from "./-components/InformasiUmumSection";
 import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
-import { TablePenawaranKelas } from "./-components/TablePenawaranKelas";
+// import { TablePenawaranKelas } from "./-components/TablePenawaranKelas";
+import { TabelPenawaranKelasBatch } from "./-components/KomponenInduk";
+TabelPenawaranKelasBatch;
 
 export const Route = createFileRoute("/(mahasiswa)/krs/pengisian")({
   component: RouteComponent,
@@ -254,7 +256,8 @@ function RouteComponent() {
             >
               <div className="w-full max-w-7xl rounded-lg shadow-md">
                 <div className="overflow-x-auto">
-                  <TablePenawaranKelas />
+                  <TabelPenawaranKelasBatch />
+                  {/* <TablePenawaranKelas /> */}
                 </div>
               </div>
             </div>
