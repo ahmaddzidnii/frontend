@@ -23,7 +23,6 @@ export const getStatusKoutaKelas = async (id_kelas: string) => {
 };
 
 export const getStatusKoutaKelasBatch = async (id_kelas: string[]) => {
-  await new Promise((resolve) => setTimeout(resolve, 10000)); // Simulate delay for batch processing
   return apiClient<BatchStatusResponse>({
     url: "mahasiswa/status-kouta-kelas-batch",
     method: "POST",
