@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import type { QueryClient } from "@tanstack/react-query";
 import { LoaderFallback } from "@/components/LoaderFallback";
 import { ConfirmationProvider } from "@/hooks/useConfirmDialog";
+import { AlertDialogProvider } from "@/hooks/useAlertDialog";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -20,8 +21,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <Suspense fallback={<LoaderFallback className="h-screen" />}>
         <AuthProvider>
           <ConfirmationProvider>
-            <HeadContent />
-            <Outlet />
+            <AlertDialogProvider>
+              <HeadContent />
+              <Outlet />
+            </AlertDialogProvider>
           </ConfirmationProvider>
         </AuthProvider>
       </Suspense>

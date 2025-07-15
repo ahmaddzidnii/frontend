@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
+// 1. Perbarui Interface
 interface ConfirmationOptions {
   title?: string;
-  message: string;
+  message: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   type?: "danger" | "warning" | "info";
+  onConfirm?: () => Promise<any>; // Fungsi async saat konfirmasi
 }
 
 interface ConfirmationContextType {
@@ -22,13 +24,20 @@ interface ConfirmationProviderProps {
 export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<ConfirmationOptions>({
-    message: "",
-    title: "Konfirmasi",
-    confirmText: "Ya",
-    cancelText: "Batal",
-    type: "info",
+    message: "Apakah Anda yakin?",
   });
   const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
+  // 2. Tambahkan state untuk loading
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   const confirm = (confirmOptions: ConfirmationOptions): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -44,11 +53,33 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
     });
   };
 
-  const handleConfirm = () => {
-    if (resolver) {
-      resolver(true);
+  // 3. Ubah handleConfirm menjadi async dan kelola loading state
+  const handleConfirm = async () => {
+    if (!options.onConfirm) {
+      if (resolver) {
+        resolver(true);
+      }
+      closeModal();
+      return;
     }
-    closeModal();
+
+    setIsLoading(true);
+    try {
+      await options.onConfirm(); // Jalankan fungsi async
+      if (resolver) {
+        resolver(true); // Kirim status sukses
+      }
+      closeModal();
+    } catch (error) {
+      console.error("Confirmation onConfirm failed:", error);
+      if (resolver) {
+        resolver(false); // Kirim status gagal
+      }
+
+      closeModal();
+    } finally {
+      setIsLoading(false); // Selalu set loading ke false di akhir
+    }
   };
 
   const handleCancel = () => {
@@ -61,31 +92,40 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
   const closeModal = () => {
     setIsOpen(false);
     setResolver(null);
+    setIsLoading(false); // Pastikan loading state di-reset
   };
-
   return (
     <ConfirmationContext.Provider value={{ confirm }}>
       {children}
 
       {/* Modal Component */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-[5px] p-5 max-w-xl w-full mx-4 shadow-xl">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{options.title}</h3>
-              <p className="text-gray-600">{options.message}</p>
+              <h3 className="mb-2 text-2xl">Konfirmasi</h3>
+              {options.message ? (
+                <div className="text-muted-foreground text-sm">{options.message}</div>
+              ) : (
+                <div className="text-muted-foreground text-sm">Apakah Anda yakin?</div>
+              )}
             </div>
 
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 ">
               <Button
                 onClick={handleConfirm}
                 variant={"default"}
+                className="uppercase"
+                disabled={isLoading}
+                role={isLoading ? "status" : "button"}
               >
                 {options.confirmText}
               </Button>
               <Button
                 onClick={handleCancel}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                className="px-4 py-2 uppercase"
+                variant="secondary"
+                disabled={isLoading}
               >
                 {options.cancelText}
               </Button>

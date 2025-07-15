@@ -19,7 +19,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleLogout: logout } = useLogout();
+  const { logout } = useLogout();
 
   const pathname = location.pathname;
 
@@ -29,12 +29,12 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     const isConfirmed = await confirm({
       message: "Apakah Anda yakin ingin keluar dari Kartu Rencana Studi?",
       confirmText: "Keluar",
-      type: "warning",
+      onConfirm: () => {
+        return logout.mutateAsync();
+      },
     });
 
-    if (isConfirmed) {
-      logout();
-    }
+    if (!isConfirmed) return;
   };
   return (
     <>

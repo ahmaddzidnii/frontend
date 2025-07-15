@@ -1,11 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
 import { FaSync } from "react-icons/fa";
 import { FaExclamation, FaPlus, FaTrash } from "react-icons/fa6";
 import { MdWarningAmber } from "react-icons/md";
 
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
-import { getStatusKoutaKelasOptions } from "@/queries/kelas";
+import { useConfirmation } from "@/hooks/useConfirmDialog";
+import { getPesanBerhasilAmbilKrs, getPesanGagalAmbilKrs, getPesanKonfirmasiAmbilKRS } from "@/utils/get-pesan-konfirmasi-ambil-krs";
+import { useMutation } from "@tanstack/react-query";
+import { useAlertDialog } from "@/hooks/useAlertDialog";
+
+export interface BatchStatus {
+  terisi: number;
+  kouta: number;
+  is_full: boolean;
+  is_joined: boolean;
+}
+
+export interface BatchStatusResponse {
+  [key: string]: BatchStatus;
+}
 
 interface RowTablePenawaranKelasProps {
   kelas: {
@@ -29,21 +42,93 @@ interface RowTablePenawaranKelasProps {
     }[];
   };
   index: number;
+  statusKouta?: BatchStatus;
+  isRowLoading: boolean;
+  rowError: string | null;
+  onRefetch: (id_kelas: string) => void;
 }
 
-export const RowTablePenawaranKelas = ({ kelas, index }: RowTablePenawaranKelasProps) => {
-  const { data: statusKouta, isLoading, isFetching, isError, refetch } = useQuery(getStatusKoutaKelasOptions(kelas.id_kelas));
+export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading, rowError, onRefetch }: RowTablePenawaranKelasProps) => {
+  const { confirm } = useConfirmation();
+  const { showAlert } = useAlertDialog();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id_kelas: string) => {
+      const randomBool = Math.random() > 0.5;
+      // Simulate an API call to fetch kouta status
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (randomBool) {
+            resolve(id_kelas);
+          } else {
+            reject(new Error("MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS"));
+          }
+        }, 1000);
+      });
+    },
+    onSuccess: (data) => {
+      console.log("Kouta status fetched:", data);
+      showAlert({
+        variant: "success",
+        message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+      showAlert({
+        variant: "error",
+        message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+      });
+    },
+  });
 
   const handleReloadKouta = () => {
-    const curretlyFecthing = isLoading || isFetching;
-    if (!curretlyFecthing) {
-      refetch();
+    if (!isRowLoading) {
+      onRefetch(kelas.id_kelas);
     }
   };
+
+  const handleTambahKelas = async () => {
+    const ok = await confirm({
+      message: getPesanKonfirmasiAmbilKRS(kelas.nama_mata_kuliah, kelas.nama_kelas),
+      confirmText: "Ya",
+      type: "info",
+      onConfirm() {
+        return mutateAsync(kelas.id_kelas);
+      },
+    });
+
+    if (!ok) return;
+  };
+
+  const handleHapusKelas = async () => {
+    const ok = await confirm({
+      message: `Apakah Anda yakin ingin menghapus kelas ${kelas.nama_mata_kuliah} - ${kelas.nama_kelas}?`,
+      confirmText: "Ya",
+      cancelText: "Batal",
+      type: "warning",
+      onConfirm() {
+        // Simulate API call to delete class
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(true);
+          }, 1000);
+        });
+      },
+    });
+
+    if (ok) {
+      showAlert({
+        variant: "success",
+        message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+      });
+    }
+  };
+
   return (
     <tr
       key={kelas.id_kelas}
-      className="hover:bg-gray-50"
+      className={`hover:bg-gray-50`}
     >
       <td className="px-4 py-3 text-center align-top border border-gray-300">{index + 1}</td>
       <td className="px-4 py-3 align-top border border-gray-300">
@@ -55,47 +140,51 @@ export const RowTablePenawaranKelas = ({ kelas, index }: RowTablePenawaranKelasP
       <td className="px-4 py-3 text-center align-top border border-gray-300">{kelas.nama_kelas}</td>
       <td className="px-4 py-3 align-top border border-gray-300 uppercase">{kelas.jenis_mata_kuliah}</td>
       <td className="px-4 py-3 align-top border border-gray-300">
+        {kelas.jadwal.length === 0 && <div className="flex items-center justify-center">-</div>}
         {kelas.jadwal.map((j, idx) => (
           <div
             key={idx}
-            className="mb-5"
+            className={kelas.jadwal.length > 1 && idx !== kelas.jadwal.length - 1 ? "mb-5" : ""}
           >
             <div>
               {j.hari}, {j.waktu_mulai} - {j.waktu_selesai}
             </div>
-            <div>
+            <div className=" text-gray-500">
               Ruang: <span className="font-semibold">{j.ruangan}</span>
             </div>
           </div>
         ))}
       </td>
       <td className="px-4 py-3 align-top border border-gray-300">
+        {kelas.dosen_pengajar.length === 0 && <div className="flex items-center justify-center">-</div>}
         {kelas.dosen_pengajar.map((dosen, idx) => (
           <div
             key={idx}
-            className="mb-5"
+            className={kelas.dosen_pengajar.length > 1 && idx !== kelas.dosen_pengajar.length - 1 ? "mb-5" : ""}
           >
             <div>{dosen.nama_dosen}</div>
           </div>
         ))}
       </td>
-      <td className="px-4 py-3 align-top  border border-gray-300">
-        <div className="flex items-center flex-col">
-          {isLoading || isFetching ? (
+      <td className="px-4 py-3 align-top border border-gray-300">
+        <div className="flex items-center justify-center">
+          {isRowLoading ? (
             <Spinner />
-          ) : isError || !statusKouta ? (
+          ) : rowError ? (
             <MdWarningAmber className="size-5 text-rose-500" />
-          ) : (
+          ) : statusKouta ? (
             <span>
               {statusKouta.terisi}/{statusKouta.kouta}
             </span>
+          ) : (
+            <span className="text-gray-400">-/-</span>
           )}
         </div>
       </td>
 
       <td className="px-4 py-3 align-top border border-gray-300">
         <div className="flex flex-col items-center space-y-2">
-          {statusKouta ? (
+          {statusKouta && !isRowLoading && !rowError ? (
             statusKouta.is_full ? (
               <Button
                 variant="kelasPenuh"
@@ -107,24 +196,27 @@ export const RowTablePenawaranKelas = ({ kelas, index }: RowTablePenawaranKelasP
               <Button
                 variant="destructive"
                 className="[&_svg]:size-5"
+                onClick={handleHapusKelas}
               >
                 <FaTrash />
               </Button>
             ) : (
-              <Button>
+              <Button
+                onClick={handleTambahKelas}
+                className="[&_svg]:size-5"
+              >
                 <FaPlus />
               </Button>
             )
           ) : (
-            <Button>
-              <FaPlus />
-            </Button>
+            <div className="animate-pulse bg-slate-300 w-10 h-9 rounded-lg" />
           )}
           <Button
             variant="reloadKouta"
             onClick={handleReloadKouta}
+            disabled={isRowLoading}
           >
-            <FaSync />
+            <FaSync className={isRowLoading ? "animate-spin" : ""} />
           </Button>
         </div>
       </td>

@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "src/routes/(mahasiswa)/krs.lihat"],
+  "include": ["**/*.ts", "**/*.tsx", "src/routes/(mahasiswa)/krs.lihat", "src/utils/get-pesan-konfirmasi-ambil-krs.jsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

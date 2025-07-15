@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Spinner } from "@/components/Spinner";
 import { getDaftarPenawaranKelasOptions } from "@/queries/kelas";
-import { RowTablePenawaranKelas, type BatchStatusResponse } from "./KomponenAnak";
+import { RowTablePenawaranKelas, type BatchStatusResponse } from "./RowTablePenawaranKelas";
 import { getStatusKoutaKelasBatch } from "@/api/get-status-kouta-kelas";
 
 type MutationVariables = {

@@ -9,8 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TableSyaratPengisianKrs } from "./-components/TableSyaratPengisianKrs";
 import { InformasiUmumSection } from "./-components/InformasiUmumSection";
 import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
-// import { TablePenawaranKelas } from "./-components/TablePenawaranKelas";
-import { TabelPenawaranKelasBatch } from "./-components/KomponenInduk";
+import { TabelPenawaranKelasBatch } from "./-components/TabelPenawaranKelasBatch";
 TabelPenawaranKelasBatch;
 
 export const Route = createFileRoute("/(mahasiswa)/krs/pengisian")({
@@ -234,11 +233,11 @@ function RouteComponent() {
                           {/* Aksi */}
                           <td className="px-4 py-3 align-top border border-gray-300">
                             <div className="flex flex-col items-center space-y-2">
-                              <Button>
-                                <FaPlus />
-                              </Button>
-                              <Button variant="reloadKouta">
-                                <FaSync />
+                              <Button
+                                variant="destructive"
+                                className="[&_svg]:size-5"
+                              >
+                                <FaTrash />
                               </Button>
                             </div>
                           </td>
@@ -257,7 +256,6 @@ function RouteComponent() {
               <div className="w-full max-w-7xl rounded-lg shadow-md">
                 <div className="overflow-x-auto">
                   <TabelPenawaranKelasBatch />
-                  {/* <TablePenawaranKelas /> */}
                 </div>
               </div>
             </div>

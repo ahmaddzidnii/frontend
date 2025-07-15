@@ -15,12 +15,8 @@ export const useLogout = () => {
     },
   });
 
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
-
   return {
-    handleLogout,
+    logout: logoutMutation,
     isLoading: logoutMutation.isPending,
     isError: logoutMutation.isError,
     error: logoutMutation.error,
