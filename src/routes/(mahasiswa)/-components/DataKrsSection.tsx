@@ -1,11 +1,12 @@
+import { FaTrash } from "react-icons/fa6";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useAlertDialog } from "@/hooks/useAlertDialog";
 import { useConfirmation } from "@/hooks/useConfirmDialog";
 import { getKelasDiambilMhsOptions } from "@/queries/kelas";
 import { getPesanBerhasilHapusKrs, getPesanGagalHapusKrs, getPesanKonfirmasiHapusKRS } from "@/utils/get-pesan-konfirmasi-ambil-krs";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { FaTrash } from "react-icons/fa6";
 
 const DeleteButtonAction = ({ id_kelas, nama_mata_kuliah, nama_kelas }: { id_kelas: string; nama_mata_kuliah: string; nama_kelas: string }) => {
   const { confirm } = useConfirmation();
@@ -82,7 +83,7 @@ export const DataKrsSection = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl rounded-lg shadow-md">
+    <div className="w-full max-w-7xl rounded-lg ">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-700 border-collapse">
           {/* Header Tabel */}
@@ -211,7 +212,7 @@ export const DataKrsSection = () => {
                 <td
                   colSpan={8}
                   align="center"
-                  className="h-[100px] text-base"
+                  className="h-[100px] text-base border"
                 >
                   Tidak ada kelas yang anda ambil
                 </td>

@@ -57,9 +57,11 @@ axiosInstance.interceptors.response.use(
       // Dapatkan URL dari request yang gagal
       const requestUrl = error.config?.url || "";
 
+      // console.log(requestUrl, "Request URL yang gagal");
+
       // Cek apakah ini bukan endpoint get session
       // Sesuaikan dengan endpoint get session Anda
-      const isGetSessionEndpoint = requestUrl.includes("/session") || requestUrl.includes("/auth/session") || requestUrl.includes("/user/session");
+      const isGetSessionEndpoint = requestUrl.includes("/session") || requestUrl.includes("/auth/session") || requestUrl.includes("auth/login");
 
       if (!isGetSessionEndpoint) {
         // Set flag untuk mencegah multiple reload

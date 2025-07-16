@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { Alert } from "@/components/Alert";
 import { useAuth } from "@/context/AuthContext";
 
-export const Route = createFileRoute("/(mahasiswa)/dash")({
+export const Route = createLazyFileRoute("/(mahasiswa)/dash")({
   component: RouteComponent,
 });
 
@@ -42,5 +42,5 @@ function RouteComponent() {
         </Alert>
       </div>
     </>
-  )
+  );
 }

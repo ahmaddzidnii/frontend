@@ -8,24 +8,17 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PetugasRouteRouteImport } from './routes/petugas/route'
 import { Route as mahasiswaRouteRouteImport } from './routes/(mahasiswa)/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PetugasIndexRouteImport } from './routes/petugas/index'
-import { Route as PetugasLihatkelasRouteImport } from './routes/petugas/lihatkelas'
-import { Route as PetugasInputkelasRouteImport } from './routes/petugas/inputkelas'
-import { Route as PetugasDashRouteImport } from './routes/petugas/dash'
-import { Route as mahasiswaDashRouteImport } from './routes/(mahasiswa)/dash'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as mahasiswaKrsPengisianRouteImport } from './routes/(mahasiswa)/krs.pengisian'
 import { Route as mahasiswaKrsLihatRouteImport } from './routes/(mahasiswa)/krs.lihat'
 
-const PetugasRouteRoute = PetugasRouteRouteImport.update({
-  id: '/petugas',
-  path: '/petugas',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const mahasiswaDashLazyRouteImport = createFileRoute('/(mahasiswa)/dash')()
+
 const mahasiswaRouteRoute = mahasiswaRouteRouteImport.update({
   id: '/(mahasiswa)',
   getParentRoute: () => rootRouteImport,
@@ -35,36 +28,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PetugasIndexRoute = PetugasIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PetugasRouteRoute,
-} as any)
-const PetugasLihatkelasRoute = PetugasLihatkelasRouteImport.update({
-  id: '/lihatkelas',
-  path: '/lihatkelas',
-  getParentRoute: () => PetugasRouteRoute,
-} as any)
-const PetugasInputkelasRoute = PetugasInputkelasRouteImport.update({
-  id: '/inputkelas',
-  path: '/inputkelas',
-  getParentRoute: () => PetugasRouteRoute,
-} as any)
-const PetugasDashRoute = PetugasDashRouteImport.update({
-  id: '/dash',
-  path: '/dash',
-  getParentRoute: () => PetugasRouteRoute,
-} as any)
-const mahasiswaDashRoute = mahasiswaDashRouteImport.update({
-  id: '/dash',
-  path: '/dash',
-  getParentRoute: () => mahasiswaRouteRoute,
-} as any)
-const authLoginRoute = authLoginRouteImport.update({
-  id: '/(auth)/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const mahasiswaDashLazyRoute = mahasiswaDashLazyRouteImport
+  .update({
+    id: '/dash',
+    path: '/dash',
+    getParentRoute: () => mahasiswaRouteRoute,
+  } as any)
+  .lazy(() => import('./routes/(mahasiswa)/dash.lazy').then((d) => d.Route))
+const authLoginRoute = authLoginRouteImport
+  .update({
+    id: '/(auth)/login',
+    path: '/login',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+  .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
 const mahasiswaKrsPengisianRoute = mahasiswaKrsPengisianRouteImport.update({
   id: '/krs/pengisian',
   path: '/krs/pengisian',
@@ -78,24 +55,15 @@ const mahasiswaKrsLihatRoute = mahasiswaKrsLihatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof mahasiswaRouteRouteWithChildren
-  '/petugas': typeof PetugasRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dash': typeof mahasiswaDashRoute
-  '/petugas/dash': typeof PetugasDashRoute
-  '/petugas/inputkelas': typeof PetugasInputkelasRoute
-  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
-  '/petugas/': typeof PetugasIndexRoute
+  '/dash': typeof mahasiswaDashLazyRoute
   '/krs/lihat': typeof mahasiswaKrsLihatRoute
   '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
 export interface FileRoutesByTo {
   '/': typeof mahasiswaRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dash': typeof mahasiswaDashRoute
-  '/petugas/dash': typeof PetugasDashRoute
-  '/petugas/inputkelas': typeof PetugasInputkelasRoute
-  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
-  '/petugas': typeof PetugasIndexRoute
+  '/dash': typeof mahasiswaDashLazyRoute
   '/krs/lihat': typeof mahasiswaKrsLihatRoute
   '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
@@ -103,51 +71,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(mahasiswa)': typeof mahasiswaRouteRouteWithChildren
-  '/petugas': typeof PetugasRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
-  '/(mahasiswa)/dash': typeof mahasiswaDashRoute
-  '/petugas/dash': typeof PetugasDashRoute
-  '/petugas/inputkelas': typeof PetugasInputkelasRoute
-  '/petugas/lihatkelas': typeof PetugasLihatkelasRoute
-  '/petugas/': typeof PetugasIndexRoute
+  '/(mahasiswa)/dash': typeof mahasiswaDashLazyRoute
   '/(mahasiswa)/krs/lihat': typeof mahasiswaKrsLihatRoute
   '/(mahasiswa)/krs/pengisian': typeof mahasiswaKrsPengisianRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/petugas'
-    | '/login'
-    | '/dash'
-    | '/petugas/dash'
-    | '/petugas/inputkelas'
-    | '/petugas/lihatkelas'
-    | '/petugas/'
-    | '/krs/lihat'
-    | '/krs/pengisian'
+  fullPaths: '/' | '/login' | '/dash' | '/krs/lihat' | '/krs/pengisian'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/login'
-    | '/dash'
-    | '/petugas/dash'
-    | '/petugas/inputkelas'
-    | '/petugas/lihatkelas'
-    | '/petugas'
-    | '/krs/lihat'
-    | '/krs/pengisian'
+  to: '/' | '/login' | '/dash' | '/krs/lihat' | '/krs/pengisian'
   id:
     | '__root__'
     | '/'
     | '/(mahasiswa)'
-    | '/petugas'
     | '/(auth)/login'
     | '/(mahasiswa)/dash'
-    | '/petugas/dash'
-    | '/petugas/inputkelas'
-    | '/petugas/lihatkelas'
-    | '/petugas/'
     | '/(mahasiswa)/krs/lihat'
     | '/(mahasiswa)/krs/pengisian'
   fileRoutesById: FileRoutesById
@@ -155,19 +94,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   mahasiswaRouteRoute: typeof mahasiswaRouteRouteWithChildren
-  PetugasRouteRoute: typeof PetugasRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/petugas': {
-      id: '/petugas'
-      path: '/petugas'
-      fullPath: '/petugas'
-      preLoaderRoute: typeof PetugasRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(mahasiswa)': {
       id: '/(mahasiswa)'
       path: '/'
@@ -182,39 +113,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/petugas/': {
-      id: '/petugas/'
-      path: '/'
-      fullPath: '/petugas/'
-      preLoaderRoute: typeof PetugasIndexRouteImport
-      parentRoute: typeof PetugasRouteRoute
-    }
-    '/petugas/lihatkelas': {
-      id: '/petugas/lihatkelas'
-      path: '/lihatkelas'
-      fullPath: '/petugas/lihatkelas'
-      preLoaderRoute: typeof PetugasLihatkelasRouteImport
-      parentRoute: typeof PetugasRouteRoute
-    }
-    '/petugas/inputkelas': {
-      id: '/petugas/inputkelas'
-      path: '/inputkelas'
-      fullPath: '/petugas/inputkelas'
-      preLoaderRoute: typeof PetugasInputkelasRouteImport
-      parentRoute: typeof PetugasRouteRoute
-    }
-    '/petugas/dash': {
-      id: '/petugas/dash'
-      path: '/dash'
-      fullPath: '/petugas/dash'
-      preLoaderRoute: typeof PetugasDashRouteImport
-      parentRoute: typeof PetugasRouteRoute
-    }
     '/(mahasiswa)/dash': {
       id: '/(mahasiswa)/dash'
       path: '/dash'
       fullPath: '/dash'
-      preLoaderRoute: typeof mahasiswaDashRouteImport
+      preLoaderRoute: typeof mahasiswaDashLazyRouteImport
       parentRoute: typeof mahasiswaRouteRoute
     }
     '/(auth)/login': {
@@ -242,13 +145,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface mahasiswaRouteRouteChildren {
-  mahasiswaDashRoute: typeof mahasiswaDashRoute
+  mahasiswaDashLazyRoute: typeof mahasiswaDashLazyRoute
   mahasiswaKrsLihatRoute: typeof mahasiswaKrsLihatRoute
   mahasiswaKrsPengisianRoute: typeof mahasiswaKrsPengisianRoute
 }
 
 const mahasiswaRouteRouteChildren: mahasiswaRouteRouteChildren = {
-  mahasiswaDashRoute: mahasiswaDashRoute,
+  mahasiswaDashLazyRoute: mahasiswaDashLazyRoute,
   mahasiswaKrsLihatRoute: mahasiswaKrsLihatRoute,
   mahasiswaKrsPengisianRoute: mahasiswaKrsPengisianRoute,
 }
@@ -257,28 +160,9 @@ const mahasiswaRouteRouteWithChildren = mahasiswaRouteRoute._addFileChildren(
   mahasiswaRouteRouteChildren,
 )
 
-interface PetugasRouteRouteChildren {
-  PetugasDashRoute: typeof PetugasDashRoute
-  PetugasInputkelasRoute: typeof PetugasInputkelasRoute
-  PetugasLihatkelasRoute: typeof PetugasLihatkelasRoute
-  PetugasIndexRoute: typeof PetugasIndexRoute
-}
-
-const PetugasRouteRouteChildren: PetugasRouteRouteChildren = {
-  PetugasDashRoute: PetugasDashRoute,
-  PetugasInputkelasRoute: PetugasInputkelasRoute,
-  PetugasLihatkelasRoute: PetugasLihatkelasRoute,
-  PetugasIndexRoute: PetugasIndexRoute,
-}
-
-const PetugasRouteRouteWithChildren = PetugasRouteRoute._addFileChildren(
-  PetugasRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   mahasiswaRouteRoute: mahasiswaRouteRouteWithChildren,
-  PetugasRouteRoute: PetugasRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport
