@@ -10,6 +10,7 @@ import { TableSyaratPengisianKrs } from "./-components/TableSyaratPengisianKrs";
 import { InformasiUmumSection } from "./-components/InformasiUmumSection";
 import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
 import { TabelPenawaranKelasBatch } from "./-components/TabelPenawaranKelasBatch";
+import { DataKrsSection } from "./-components/DataKrsSection";
 TabelPenawaranKelasBatch;
 
 export const Route = createFileRoute("/(mahasiswa)/krs/pengisian")({
@@ -17,7 +18,6 @@ export const Route = createFileRoute("/(mahasiswa)/krs/pengisian")({
   loader: ({ context: { queryClient } }) => {
     queryClient.prefetchQuery(syaratPengisianKrsOptions);
   },
-  staleTime: Infinity,
 });
 
 function RouteComponent() {
@@ -140,112 +140,7 @@ function RouteComponent() {
                 </div>
               </TabsContent>
               <TabsContent value="dataKrs">
-                <div className="w-full max-w-7xl rounded-lg shadow-md">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-700 border-collapse">
-                      {/* Header Tabel */}
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase w-16 text-center border border-gray-300"
-                          >
-                            No.
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
-                          >
-                            Mata Kuliah
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
-                          >
-                            SKS
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
-                          >
-                            Kelas
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
-                          >
-                            Jenis
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
-                          >
-                            Jadwal
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
-                          >
-                            Dosen
-                          </th>
-
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
-                          >
-                            Aksi
-                          </th>
-                        </tr>
-                      </thead>
-                      {/* Body Tabel */}
-                      <tbody>
-                        {/* Baris Data Mata Kuliah */}
-                        <tr className="hover:bg-gray-50">
-                          {/* Nomor */}
-                          <td className="px-4 py-3 text-center align-top border border-gray-300">1</td>
-                          {/* Mata Kuliah */}
-                          <td className="px-4 py-3 align-top border border-gray-300">
-                            <div className="font-bold text-[#105E15]">S2INF20</div>
-                            <div className="text-gray-500">INF524108</div>
-                            <div>Computer Vision</div>
-                          </td>
-                          {/* SKS */}
-                          <td className="px-4 py-3 text-center align-top border border-gray-300">4</td>
-                          {/* Kelas */}
-                          <td className="px-4 py-3 text-center align-top border border-gray-300">A</td>
-                          {/* Jenis */}
-                          <td className="px-4 py-3 align-top border border-gray-300">PILIHAN</td>
-                          {/* Jadwal */}
-                          <td className="px-4 py-3 align-top border border-gray-300">
-                            <div>Senin, 12:30 - 14:15</div>
-                            <div className="text-xs text-gray-500">Ruang : FST-102</div>
-                            <div className="mt-2">Kamis, 07:00 - 08:45</div>
-                            <div className="text-xs text-gray-500">Ruang : FST-102</div>
-                          </td>
-                          {/* Dosen (Dikosongkan sesuai gambar) */}
-                          <td className="px-4 py-3 align-top border border-gray-300">
-                            <div>Gandewa Iswahyudi M.Kom</div>
-                            <div className="text-xs text-gray-500">198609262015051001</div>
-                            <div className="mt-2">Gandewa Iswahyuda M.Kom</div>
-                            <div className="text-xs text-gray-500">198609262015051001</div>
-                          </td>
-
-                          {/* Aksi */}
-                          <td className="px-4 py-3 align-top border border-gray-300">
-                            <div className="flex flex-col items-center space-y-2">
-                              <Button
-                                variant="destructive"
-                                className="[&_svg]:size-5"
-                              >
-                                <FaTrash />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <DataKrsSection />
               </TabsContent>
             </Tabs>
 

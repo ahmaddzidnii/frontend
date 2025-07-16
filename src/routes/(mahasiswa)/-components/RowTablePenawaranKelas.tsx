@@ -5,7 +5,12 @@ import { MdWarningAmber } from "react-icons/md";
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useConfirmation } from "@/hooks/useConfirmDialog";
-import { getPesanBerhasilAmbilKrs, getPesanGagalAmbilKrs, getPesanKonfirmasiAmbilKRS } from "@/utils/get-pesan-konfirmasi-ambil-krs";
+import {
+  getPesanBerhasilAmbilKrs,
+  getPesanGagalAmbilKrs,
+  getPesanKonfirmasiAmbilKRS,
+  getPesanKonfirmasiHapusKRS,
+} from "@/utils/get-pesan-konfirmasi-ambil-krs";
 import { useMutation } from "@tanstack/react-query";
 import { useAlertDialog } from "@/hooks/useAlertDialog";
 
@@ -103,7 +108,7 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
 
   const handleHapusKelas = async () => {
     const ok = await confirm({
-      message: `Apakah Anda yakin ingin menghapus kelas ${kelas.nama_mata_kuliah} - ${kelas.nama_kelas}?`,
+      message: getPesanKonfirmasiHapusKRS(kelas.nama_mata_kuliah, kelas.nama_kelas),
       confirmText: "Ya",
       cancelText: "Batal",
       type: "warning",

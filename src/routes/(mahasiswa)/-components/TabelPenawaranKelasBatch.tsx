@@ -72,8 +72,21 @@ export const TabelPenawaranKelasBatch = () => {
       </div>
     );
   }
+
   if (isError || !daftarPenawaranKelas) {
     return <div className="h-[347.15px] flex items-center justify-center">Error loading data</div>;
+  }
+
+  // Handle ketika tidak ada data semester_paket sama sekali
+  if (!daftarPenawaranKelas.semester_paket || Object.keys(daftarPenawaranKelas.semester_paket).length === 0) {
+    return (
+      <div className="h-[347.15px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-600 font-medium">Tidak ada penawaran kelas tersedia</div>
+          <div className="text-gray-500 text-sm mt-1">Silakan coba lagi nanti atau hubungi administrator</div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -92,7 +105,7 @@ export const TabelPenawaranKelasBatch = () => {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(daftarPenawaranKelas.semester_paket ?? {}).map(([semester, kelasList]) => (
+        {Object.entries(daftarPenawaranKelas.semester_paket).map(([semester, kelasList]) => (
           <React.Fragment key={semester}>
             <tr className="bg-gray-200">
               <td
@@ -102,17 +115,28 @@ export const TabelPenawaranKelasBatch = () => {
                 SEMESTER PAKET {semester}
               </td>
             </tr>
-            {kelasList.map((kelas, index) => (
-              <RowTablePenawaranKelas
-                key={kelas.id_kelas}
-                kelas={kelas}
-                index={index}
-                statusKouta={statuses[kelas.id_kelas]}
-                isRowLoading={isRefetching.includes(kelas.id_kelas)}
-                rowError={rowErrors[kelas.id_kelas] || null}
-                onRefetch={handleRefetchRow}
-              />
-            ))}
+            {kelasList.length > 0 ? (
+              kelasList.map((kelas, index) => (
+                <RowTablePenawaranKelas
+                  key={kelas.id_kelas}
+                  kelas={kelas}
+                  index={index}
+                  statusKouta={statuses[kelas.id_kelas]}
+                  isRowLoading={isRefetching.includes(kelas.id_kelas)}
+                  rowError={rowErrors[kelas.id_kelas] || null}
+                  onRefetch={handleRefetchRow}
+                />
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="px-4 py-2 text-center text-gray-500 border border-gray-300"
+                >
+                  Tidak ada kelas yang tersedia untuk semester ini.
+                </td>
+              </tr>
+            )}
           </React.Fragment>
         ))}
       </tbody>

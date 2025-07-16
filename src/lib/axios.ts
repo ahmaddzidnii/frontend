@@ -41,3 +41,46 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// Flag untuk mencegah infinite reload
+let isReloading = false;
+
+// Response interceptor untuk menangani 401 errors
+axiosInstance.interceptors.response.use(
+  (response) => {
+    // Jika response sukses, langsung kembalikan
+    return response;
+  },
+  (error) => {
+    // Cek apakah error adalah 401 Unauthorized
+    if (error.response?.status === 401 && !isReloading) {
+      // Dapatkan URL dari request yang gagal
+      const requestUrl = error.config?.url || "";
+
+      // Cek apakah ini bukan endpoint get session
+      // Sesuaikan dengan endpoint get session Anda
+      const isGetSessionEndpoint = requestUrl.includes("/session") || requestUrl.includes("/auth/session") || requestUrl.includes("/user/session");
+
+      if (!isGetSessionEndpoint) {
+        // Set flag untuk mencegah multiple reload
+        isReloading = true;
+
+        // Hapus session_id dari localStorage
+        localStorage.removeItem("session_id");
+
+        // Optional: Tambahkan delay kecil untuk memastikan cleanup selesai
+        setTimeout(() => {
+          // Redirect ke halaman login atau reload
+          window.location.href = "/login"; // Lebih baik daripada reload
+          // atau gunakan window.location.reload() jika perlu
+        }, 100);
+
+        // Return rejected promise untuk menghentikan eksekusi lebih lanjut
+        return Promise.reject(error);
+      }
+    }
+
+    // Untuk error lain atau get session endpoint, lempar error seperti biasa
+    return Promise.reject(error);
+  }
+);
