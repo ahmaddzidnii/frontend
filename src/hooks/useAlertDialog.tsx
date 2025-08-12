@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 interface AlertOptions {
   title?: string;
   message: React.ReactNode;
+  keterangan?: string;
   variant?: "success" | "error";
 }
 
@@ -13,6 +14,13 @@ interface AlertDialogContextType {
 }
 
 const AlertDialogContext = createContext<AlertDialogContextType | undefined>(undefined);
+
+function wrapBracesSplit(text?: string) {
+  return text?.split(/({[^}]+})/).map((chunk, i) => {
+    const m = chunk.match(/^{([^}]+)}$/);
+    return m ? <strong key={i}>{m[1].trim()}</strong> : chunk;
+  });
+}
 
 export const useAlertDialog = () => {
   const context = useContext(AlertDialogContext);
@@ -24,11 +32,17 @@ export const useAlertDialog = () => {
 
 export const AlertDialogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<AlertOptions>({ title: "", message: "", variant: "success" });
+  const [options, setOptions] = useState<AlertOptions>({
+    title: "",
+    message: "",
+    variant: "success",
+    keterangan: "MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS",
+  });
 
   const showAlert = (alertOptions: AlertOptions) => {
     setOptions({
       variant: "success",
+      keterangan: "MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS",
       ...alertOptions,
     });
     setIsOpen(true);
@@ -73,7 +87,7 @@ export const AlertDialogProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 <span>
                   <strong>Keterangan :</strong>
                 </span>
-                <p className="uppercase italic mt-1 text-xs">MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS</p>
+                <p className="uppercase italic mt-1 text-xs">{wrapBracesSplit(options.keterangan?.toUpperCase())}</p>
               </div>
             )}
             <div className="flex justify-end space-x-3 ">

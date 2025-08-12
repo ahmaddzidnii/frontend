@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { AuthLayout } from "@/layouts/AuthLayout";
-import { AxiosResponseError, getErrorMessage } from "@/lib/errors";
+import { getErrorMessage } from "@/lib/errors";
 export const Route = createLazyFileRoute("/(auth)/login")({
   component: RouteComponent,
 });

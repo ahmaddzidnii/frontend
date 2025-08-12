@@ -1,42 +1,41 @@
 import { FaTrash } from "react-icons/fa6";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
+import { hapusKelas } from "@/api/kelas/hapus-kelas";
 import { useAlertDialog } from "@/hooks/useAlertDialog";
 import { useConfirmation } from "@/hooks/useConfirmDialog";
-import { getKelasDiambilMhsOptions } from "@/queries/kelas";
+import { informasiUmumMhsOptions } from "@/queries/mahasiswa";
+import { getDaftarPenawaranKelasOptions, getKelasDiambilMhsOptions } from "@/queries/kelas";
 import { getPesanBerhasilHapusKrs, getPesanGagalHapusKrs, getPesanKonfirmasiHapusKRS } from "@/utils/get-pesan-konfirmasi-ambil-krs";
 
 const DeleteButtonAction = ({ id_kelas, nama_mata_kuliah, nama_kelas }: { id_kelas: string; nama_mata_kuliah: string; nama_kelas: string }) => {
   const { confirm } = useConfirmation();
   const { showAlert } = useAlertDialog();
-  const { mutateAsync } = useMutation({
-    mutationFn: async () => {
-      const randomBool = Math.random() > 0.5;
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (randomBool) {
-            resolve({
-              id_kelas,
-              nama_kelas,
-              nama_mata_kuliah,
-            });
-          } else {
-            reject(new Error("MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS"));
-          }
-        }, 1000);
-      });
+  const queryClient = useQueryClient();
+  const { mutateAsync: removeKelasFromKrs } = useMutation({
+    mutationFn: async (id_kelas: string) => {
+      return hapusKelas(id_kelas);
     },
     onSuccess: (data) => {
-      console.log("Kouta status fetched:", data);
-      showAlert({
-        variant: "success",
-        message: getPesanBerhasilHapusKrs(nama_mata_kuliah, nama_kelas),
-      });
+      if (data.ok) {
+        queryClient.invalidateQueries(getDaftarPenawaranKelasOptions);
+        queryClient.invalidateQueries(informasiUmumMhsOptions);
+        queryClient.invalidateQueries(getKelasDiambilMhsOptions);
+        showAlert({
+          variant: "success",
+          message: getPesanBerhasilHapusKrs(nama_mata_kuliah, nama_kelas),
+        });
+      } else {
+        showAlert({
+          variant: "error",
+          message: getPesanGagalHapusKrs(nama_mata_kuliah, nama_kelas),
+        });
+      }
     },
     onError: (error) => {
-      console.log(error);
+      console.error(error);
       showAlert({
         variant: "error",
         message: getPesanGagalHapusKrs(nama_mata_kuliah, nama_kelas),
@@ -51,7 +50,7 @@ const DeleteButtonAction = ({ id_kelas, nama_mata_kuliah, nama_kelas }: { id_kel
       cancelText: "Batal",
       type: "warning",
       onConfirm() {
-        return mutateAsync();
+        return removeKelasFromKrs(id_kelas);
       },
     });
   };

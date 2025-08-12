@@ -62,6 +62,7 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
   const { confirm } = useConfirmation();
   const { showAlert } = useAlertDialog();
   const queryClient = useQueryClient();
+
   const { mutateAsync: takeKrs } = useMutation({
     mutationFn: async (id_kelas: string) => {
       return ambilKelas(id_kelas);
@@ -83,14 +84,16 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
         });
       }
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (error: any) => {
+      console.error(error.data);
       showAlert({
         variant: "error",
         message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        keterangan: error.data,
       });
     },
   });
+
   const { mutateAsync: removeKelasFromKrs } = useMutation({
     mutationFn: async (id_kelas: string) => {
       return hapusKelas(id_kelas);
@@ -111,11 +114,12 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
         });
       }
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (error: any) => {
+      console.error(error.data);
       showAlert({
         variant: "error",
         message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        keterangan: error.data,
       });
     },
   });
