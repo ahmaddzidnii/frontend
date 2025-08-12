@@ -26,7 +26,7 @@ export const InformasiUmumSection = () => {
       sksKumulatif={data.sks_kumulatif?.toString() || "SKS Kumulatif Tidak Tersedia"}
       ipsLalu={data.ips_lalu?.toFixed(2) || "IPS Lalu Tidak Tersedia"}
       jatahSks={data.jatah_sks?.toString() || "Jatah SKS Tidak Tersedia"}
-      sksAmbil={data.sks_ambil.toString() || "SKS Ambil Tidak Tersedia"}
+      sksAmbil={data.sks_ambil?.toString() || "SKS Ambil Tidak Tersedia"}
       sisaSks={data.sisa_sks?.toString() || "Sisa SKS Tidak Tersedia"}
     />
   );

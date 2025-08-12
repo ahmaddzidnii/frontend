@@ -3,7 +3,7 @@ import { apiClient } from "@/lib/api-client";
 type StatusKoutaKelas = {
   id_kelas: string;
   terisi: number;
-  kouta: number;
+  kuota: number;
   is_full: boolean;
   is_joined: boolean;
 };
@@ -14,7 +14,7 @@ type BatchStatusResponse = {
 
 export const getStatusKoutaKelas = async (id_kelas: string) => {
   return apiClient<StatusKoutaKelas>({
-    url: "mahasiswa/status-kouta-kelas",
+    url: "/mahasiswa/status-kouta-kelas",
     method: "POST",
     data: {
       id_kelas,
@@ -24,10 +24,10 @@ export const getStatusKoutaKelas = async (id_kelas: string) => {
 
 export const getStatusKoutaKelasBatch = async (id_kelas: string[]) => {
   return apiClient<BatchStatusResponse>({
-    url: "mahasiswa/status-kouta-kelas-batch",
+    url: "/schedules/get-class-status-batch",
     method: "POST",
     data: {
-      id_kelas,
+      classIds: id_kelas,
     },
   });
 };

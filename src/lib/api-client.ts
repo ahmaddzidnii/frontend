@@ -29,9 +29,12 @@ export const apiClient = async <T>(config: AxiosRequestConfig): Promise<T> => {
         throw new AxiosNetworkError("Gagal terhubung ke server. Periksa koneksi internet Anda.");
       }
 
-      const errorMessage = error.response.data?.message || "Terjadi kesalahan pada server.";
-      const validationErrors = error.response.data?.validation_errors || null;
-      throw new AxiosResponseError(errorMessage, validationErrors);
+      // const errorMessage = error.response.data?.message || "Terjadi kesalahan pada server.";
+      // const validationErrors = error.response.data?.validation_errors || null;
+
+      const errorMessage = error.response.data?.message;
+
+      throw new AxiosResponseError("Axios Response Error", errorMessage);
     }
 
     throw new Error("Terjadi kesalahan yang tidak terduga.");

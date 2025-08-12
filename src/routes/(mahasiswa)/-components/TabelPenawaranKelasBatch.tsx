@@ -82,8 +82,8 @@ export const TabelPenawaranKelasBatch = () => {
     return (
       <div className="h-[347.15px] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-gray-600 font-medium">Tidak ada penawaran kelas tersedia</div>
-          <div className="text-gray-500 text-sm mt-1">Silakan coba lagi nanti atau hubungi administrator</div>
+          <div className="font-medium">Tidak ada penawaran kelas tersedia</div>
+          <div className="text-sm mt-1">Silakan coba lagi nanti atau hubungi administrator</div>
         </div>
       </div>
     );

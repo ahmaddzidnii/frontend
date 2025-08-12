@@ -171,7 +171,7 @@ const PenawaranKelasSection = memo(() => (
     className="bg-white p-5 rounded-[5px] shadow flex flex-col"
     id="isi-krs"
   >
-    <div className="w-full max-w-7xl rounded-lg shadow-md">
+    <div className="w-full max-w-7xl rounded-lg">
       <div className="overflow-x-auto">
         <TabelPenawaranKelasBatch />
       </div>

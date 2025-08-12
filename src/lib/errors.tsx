@@ -20,15 +20,24 @@ export class AxiosResponseError<T = any> extends Error {
   }
 }
 
-export const getErrorMessage = (error: unknown): string => {
+export const getErrorMessage = (error: unknown): any => {
   // 1. Prioritaskan custom error kita yang pesannya sudah rapi
-  if (error instanceof AxiosResponseError || error instanceof AxiosNetworkError) {
+  if (error instanceof AxiosNetworkError) {
     return error.message;
+  }
+
+  if (error instanceof AxiosResponseError) {
+    if (typeof error.data == "string") {
+      return error.data;
+    } else {
+      return error.data.map((m: any) => {
+        return <p>{m}</p>;
+      });
+    }
   }
 
   // 2. Fallback untuk error JavaScript standar
   if (error instanceof Error) {
-    // Ini akan menangkap pesan dari `new Error("...")` di service kita
     return error.message;
   }
 

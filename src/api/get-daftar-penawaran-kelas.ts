@@ -23,7 +23,7 @@ type DaftarPenawaranKelas = {
 
 export const getDaftarPenawaranKelas = () => {
   return apiClient<DaftarPenawaranKelas>({
-    url: "mahasiswa/penawaran-kelas",
+    url: "schedules/get-class-schedule-offered",
     method: "GET",
   });
 };

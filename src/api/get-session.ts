@@ -15,16 +15,15 @@ export type GetSessionError = {
 export type GetSessionResult = GetSessionSuccess | GetSessionError | null;
 
 type RawSessionResponse = {
-  status: number;
-  validation_errors: any;
-  message: string;
   data: {
-    user_id: string;
-    nomor_induk: string;
-    nama: string;
-    role: {
-      id_role: string;
-      role_name: string;
+    session: {
+      session_id: string;
+    };
+    user: {
+      id: string;
+      username: string;
+      name: string;
+      role: string;
     };
   };
 };
@@ -33,9 +32,9 @@ export const getSessionData = async (): Promise<GetSessionResult> => {
   try {
     const session = await axiosInstance.get<RawSessionResponse>("/auth/session");
     return {
-      id: session.data.data.user_id,
-      name: session.data.data.nama,
-      nim: session.data.data.nomor_induk,
+      id: session.data.data.user.id,
+      name: session.data.data.user.name,
+      nim: session.data.data.user.username,
     };
   } catch (error: any) {
     console.error(error);

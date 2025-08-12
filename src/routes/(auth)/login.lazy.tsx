@@ -16,13 +16,11 @@ export const Route = createLazyFileRoute("/(auth)/login")({
   component: RouteComponent,
 });
 
-// Login schema validation dengan Zod
 const loginSchema = z.object({
   nim: z.string().min(1, "Username tidak boleh kosong."),
   password: z.string().min(1, "Password tidak boleh kosong."),
 });
 
-// Ekstrak tipe data dari skema untuk keamanan tipe
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 function RouteComponent() {
@@ -166,13 +164,6 @@ const ErrorAlert = memo(({ isError, error }: { isError: boolean; error: any }) =
     <Alert variant="error">
       <div className="flex flex-col gap-1 text-red-600">
         <p className="text-sm font-semibold">{getErrorMessage(error)}</p>
-        {error instanceof AxiosResponseError && error.data && (
-          <ul className="list-disc pl-5 text-sm">
-            {Object.entries(error.data as Record<string, string[]>).map(([field, messages]) => (
-              <li key={field}>{Array.isArray(messages) ? messages.join(", ") : messages}</li>
-            ))}
-          </ul>
-        )}
       </div>
     </Alert>
   );

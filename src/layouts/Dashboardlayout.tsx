@@ -40,7 +40,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <>
       <Navbar />
       <div className="max-w-7xl mx-auto flex pt-20 min-h-screen">
-        <aside className="bg-white shadow w-72 ">
+        <aside className="bg-white shadow w-72 shrink-0 ">
           <div className="relative h-[52px] flex items-center pl-5">
             <span className="font-bold">Navigasi</span>
 

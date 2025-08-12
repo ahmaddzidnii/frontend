@@ -13,7 +13,7 @@ type InformasiUmumMhsType = {
 
 export const getInformasiUmumMhs = async () => {
   return apiClient<InformasiUmumMhsType>({
-    url: "mahasiswa/informasi-umum",
+    url: "mahasiswa/get-common-information",
     method: "GET",
   });
 };

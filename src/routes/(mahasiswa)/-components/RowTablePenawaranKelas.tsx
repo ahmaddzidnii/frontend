@@ -1,22 +1,27 @@
 import { FaSync } from "react-icons/fa";
 import { FaExclamation, FaPlus, FaTrash } from "react-icons/fa6";
 import { MdWarningAmber } from "react-icons/md";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useConfirmation } from "@/hooks/useConfirmDialog";
 import {
   getPesanBerhasilAmbilKrs,
+  getPesanBerhasilHapusKrs,
   getPesanGagalAmbilKrs,
   getPesanKonfirmasiAmbilKRS,
   getPesanKonfirmasiHapusKRS,
 } from "@/utils/get-pesan-konfirmasi-ambil-krs";
-import { useMutation } from "@tanstack/react-query";
 import { useAlertDialog } from "@/hooks/useAlertDialog";
+import { ambilKelas } from "@/api/kelas/ambil-kelas";
+import { hapusKelas } from "@/api/kelas/hapus-kelas";
+import { informasiUmumMhsOptions } from "@/queries/mahasiswa";
+import { getKelasDiambilMhsOptions } from "@/queries/kelas";
 
 export interface BatchStatus {
   terisi: number;
-  kouta: number;
+  kuota: number;
   is_full: boolean;
   is_joined: boolean;
 }
@@ -56,30 +61,58 @@ interface RowTablePenawaranKelasProps {
 export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading, rowError, onRefetch }: RowTablePenawaranKelasProps) => {
   const { confirm } = useConfirmation();
   const { showAlert } = useAlertDialog();
-
-  const { mutateAsync } = useMutation({
+  const queryClient = useQueryClient();
+  const { mutateAsync: takeKrs } = useMutation({
     mutationFn: async (id_kelas: string) => {
-      const randomBool = Math.random() > 0.5;
-      // Simulate an API call to fetch kouta status
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (randomBool) {
-            resolve(id_kelas);
-          } else {
-            reject(new Error("MAAF, DATA MATA KULIAH SUDAH ADA DI ISIAN KRS"));
-          }
-        }, 1000);
-      });
+      return ambilKelas(id_kelas);
     },
     onSuccess: (data) => {
-      console.log("Kouta status fetched:", data);
-      showAlert({
-        variant: "success",
-        message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
-      });
+      if (data.ok) {
+        handleReloadKouta();
+        queryClient.invalidateQueries(informasiUmumMhsOptions);
+        queryClient.invalidateQueries(getKelasDiambilMhsOptions);
+
+        showAlert({
+          variant: "success",
+          message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        });
+      } else {
+        showAlert({
+          variant: "error",
+          message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        });
+      }
     },
     onError: (error) => {
-      console.log(error);
+      console.error(error);
+      showAlert({
+        variant: "error",
+        message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+      });
+    },
+  });
+  const { mutateAsync: removeKelasFromKrs } = useMutation({
+    mutationFn: async (id_kelas: string) => {
+      return hapusKelas(id_kelas);
+    },
+    onSuccess: (data) => {
+      if (data.ok) {
+        handleReloadKouta();
+        queryClient.invalidateQueries(informasiUmumMhsOptions);
+        queryClient.invalidateQueries(getKelasDiambilMhsOptions);
+        showAlert({
+          variant: "success",
+          message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        });
+      } else {
+        showAlert({
+          variant: "error",
+          message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error(error);
       showAlert({
         variant: "error",
         message: getPesanGagalAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
@@ -99,7 +132,7 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
       confirmText: "Ya",
       type: "info",
       onConfirm() {
-        return mutateAsync(kelas.id_kelas);
+        return takeKrs(kelas.id_kelas);
       },
     });
 
@@ -113,19 +146,14 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
       cancelText: "Batal",
       type: "warning",
       onConfirm() {
-        // Simulate API call to delete class
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(true);
-          }, 1000);
-        });
+        return removeKelasFromKrs(kelas.id_kelas);
       },
     });
 
     if (ok) {
       showAlert({
         variant: "success",
-        message: getPesanBerhasilAmbilKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
+        message: getPesanBerhasilHapusKrs(kelas.nama_mata_kuliah, kelas.nama_kelas),
       });
     }
   };
@@ -179,7 +207,7 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
             <MdWarningAmber className="size-5 text-rose-500" />
           ) : statusKouta ? (
             <span>
-              {statusKouta.terisi}/{statusKouta.kouta}
+              {statusKouta.terisi}/{statusKouta.kuota}
             </span>
           ) : (
             <span className="text-gray-400">-/-</span>
@@ -190,7 +218,7 @@ export const RowTablePenawaranKelas = ({ kelas, index, statusKouta, isRowLoading
       <td className="px-4 py-3 align-top border border-gray-300">
         <div className="flex flex-col items-center space-y-2">
           {statusKouta && !isRowLoading && !rowError ? (
-            statusKouta.is_full ? (
+            statusKouta.is_full && !statusKouta.is_joined ? (
               <Button
                 variant="kelasPenuh"
                 className="pointer-events-none [&_svg]:size-5"

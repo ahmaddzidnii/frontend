@@ -26,7 +26,7 @@ export const login = async (nim: string, password: string): Promise<LoginData> =
     method: "POST",
     url: "auth/login",
     data: {
-      username: nim,
+      username: nim.trim(),
       password,
     },
   });

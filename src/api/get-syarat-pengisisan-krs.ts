@@ -11,7 +11,7 @@ type SyaratKrsType = {
 };
 export const getSyaratPengisianKrs = () => {
   return apiClient<SyaratKrsType>({
-    url: "mahasiswa/syarat-pengisian-krs",
+    url: "/krs/requirements",
     method: "GET",
   });
 };

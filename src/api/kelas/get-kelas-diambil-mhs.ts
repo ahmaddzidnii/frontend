@@ -18,7 +18,7 @@ type DaftarKelasDiambilType = {
 
 export const getKelasDiambilMhs = () => {
   return apiClient<DaftarKelasDiambilType>({
-    url: "krs/kelas-diambil",
+    url: "/krs/get-classes-taken",
     method: "GET",
   });
 };
