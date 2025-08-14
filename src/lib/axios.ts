@@ -13,7 +13,7 @@ declare module "axios" {
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:1001",
-  timeout: 10000,
+  timeout: 1 * 60 * 1000, // 1 menit
   withCredentials: true,
   adapter: "fetch",
 });
