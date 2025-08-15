@@ -1,4 +1,4 @@
-import { ChevronRight, Menu, MenuIcon } from "lucide-react";
+import { ChevronRight, MenuIcon } from "lucide-react";
 import { FaListCheck } from "react-icons/fa6";
 import { FaClipboard, FaHome, FaSignOutAlt } from "react-icons/fa";
 import { useLocation, useNavigate } from "@tanstack/react-router";
