@@ -11,22 +11,14 @@ import { InformasiUmumSection } from "./-components/InformasiUmumSection";
 import { TabelPenawaranKelasBatch } from "./-components/TabelPenawaranKelasBatch";
 import { TableSyaratPengisianKrs } from "./-components/TableSyaratPengisianKrs";
 import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
+import { WrapperKrs } from "./-components/WrapperKrs";
 
-export const Route = createFileRoute("/(mahasiswa)/krs/pengisian")({
+export const Route = createFileRoute("/(krs)/krs/pengisian")({
   component: RouteComponent,
   loader: ({ context: { queryClient } }) => {
     queryClient.prefetchQuery(syaratPengisianKrsOptions);
   },
 });
-
-// Komponen untuk header halaman
-const PageHeader = memo(() => (
-  <header className="bg-white shadow w-full">
-    <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15]">
-      <span className="text-xl">Pengisian Kartu Rencana Studi</span>
-    </nav>
-  </header>
-));
 
 // Komponen untuk alert informasi
 const InfoAlert = memo(() => (
@@ -187,9 +179,8 @@ function RouteComponent() {
   }, []);
 
   return (
-    <>
-      <PageHeader />
-      <div className="shadow flex-1 p-10 flex flex-col gap-5 bg-[#ecedf1]">
+    <WrapperKrs title="Pengisian Kartu Rencana Studi">
+      <div className="space-y-4">
         <InfoAlert />
 
         <SyaratPengisianSection
@@ -204,6 +195,6 @@ function RouteComponent() {
           </>
         )}
       </div>
-    </>
+    </WrapperKrs>
   );
 }

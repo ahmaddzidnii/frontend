@@ -11,16 +11,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as mahasiswaRouteRouteImport } from './routes/(mahasiswa)/route'
+import { Route as krsRouteRouteImport } from './routes/(krs)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as mahasiswaKrsPengisianRouteImport } from './routes/(mahasiswa)/krs.pengisian'
-import { Route as mahasiswaKrsLihatRouteImport } from './routes/(mahasiswa)/krs.lihat'
+import { Route as krsKrsPengisianRouteImport } from './routes/(krs)/krs.pengisian'
+import { Route as krsKrsLihatRouteImport } from './routes/(krs)/krs.lihat'
 
-const mahasiswaDashLazyRouteImport = createFileRoute('/(mahasiswa)/dash')()
+const krsDashLazyRouteImport = createFileRoute('/(krs)/dash')()
 
-const mahasiswaRouteRoute = mahasiswaRouteRouteImport.update({
-  id: '/(mahasiswa)',
+const krsRouteRoute = krsRouteRouteImport.update({
+  id: '/(krs)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,13 +28,13 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const mahasiswaDashLazyRoute = mahasiswaDashLazyRouteImport
+const krsDashLazyRoute = krsDashLazyRouteImport
   .update({
     id: '/dash',
     path: '/dash',
-    getParentRoute: () => mahasiswaRouteRoute,
+    getParentRoute: () => krsRouteRoute,
   } as any)
-  .lazy(() => import('./routes/(mahasiswa)/dash.lazy').then((d) => d.Route))
+  .lazy(() => import('./routes/(krs)/dash.lazy').then((d) => d.Route))
 const authLoginRoute = authLoginRouteImport
   .update({
     id: '/(auth)/login',
@@ -42,39 +42,39 @@ const authLoginRoute = authLoginRouteImport
     getParentRoute: () => rootRouteImport,
   } as any)
   .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
-const mahasiswaKrsPengisianRoute = mahasiswaKrsPengisianRouteImport.update({
+const krsKrsPengisianRoute = krsKrsPengisianRouteImport.update({
   id: '/krs/pengisian',
   path: '/krs/pengisian',
-  getParentRoute: () => mahasiswaRouteRoute,
+  getParentRoute: () => krsRouteRoute,
 } as any)
-const mahasiswaKrsLihatRoute = mahasiswaKrsLihatRouteImport.update({
+const krsKrsLihatRoute = krsKrsLihatRouteImport.update({
   id: '/krs/lihat',
   path: '/krs/lihat',
-  getParentRoute: () => mahasiswaRouteRoute,
+  getParentRoute: () => krsRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof mahasiswaRouteRouteWithChildren
+  '/': typeof krsRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dash': typeof mahasiswaDashLazyRoute
-  '/krs/lihat': typeof mahasiswaKrsLihatRoute
-  '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
+  '/dash': typeof krsDashLazyRoute
+  '/krs/lihat': typeof krsKrsLihatRoute
+  '/krs/pengisian': typeof krsKrsPengisianRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof mahasiswaRouteRouteWithChildren
+  '/': typeof krsRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dash': typeof mahasiswaDashLazyRoute
-  '/krs/lihat': typeof mahasiswaKrsLihatRoute
-  '/krs/pengisian': typeof mahasiswaKrsPengisianRoute
+  '/dash': typeof krsDashLazyRoute
+  '/krs/lihat': typeof krsKrsLihatRoute
+  '/krs/pengisian': typeof krsKrsPengisianRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/(mahasiswa)': typeof mahasiswaRouteRouteWithChildren
+  '/(krs)': typeof krsRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
-  '/(mahasiswa)/dash': typeof mahasiswaDashLazyRoute
-  '/(mahasiswa)/krs/lihat': typeof mahasiswaKrsLihatRoute
-  '/(mahasiswa)/krs/pengisian': typeof mahasiswaKrsPengisianRoute
+  '/(krs)/dash': typeof krsDashLazyRoute
+  '/(krs)/krs/lihat': typeof krsKrsLihatRoute
+  '/(krs)/krs/pengisian': typeof krsKrsPengisianRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -84,26 +84,26 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/(mahasiswa)'
+    | '/(krs)'
     | '/(auth)/login'
-    | '/(mahasiswa)/dash'
-    | '/(mahasiswa)/krs/lihat'
-    | '/(mahasiswa)/krs/pengisian'
+    | '/(krs)/dash'
+    | '/(krs)/krs/lihat'
+    | '/(krs)/krs/pengisian'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  mahasiswaRouteRoute: typeof mahasiswaRouteRouteWithChildren
+  krsRouteRoute: typeof krsRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(mahasiswa)': {
-      id: '/(mahasiswa)'
+    '/(krs)': {
+      id: '/(krs)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof mahasiswaRouteRouteImport
+      preLoaderRoute: typeof krsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -113,12 +113,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(mahasiswa)/dash': {
-      id: '/(mahasiswa)/dash'
+    '/(krs)/dash': {
+      id: '/(krs)/dash'
       path: '/dash'
       fullPath: '/dash'
-      preLoaderRoute: typeof mahasiswaDashLazyRouteImport
-      parentRoute: typeof mahasiswaRouteRoute
+      preLoaderRoute: typeof krsDashLazyRouteImport
+      parentRoute: typeof krsRouteRoute
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -127,42 +127,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(mahasiswa)/krs/pengisian': {
-      id: '/(mahasiswa)/krs/pengisian'
+    '/(krs)/krs/pengisian': {
+      id: '/(krs)/krs/pengisian'
       path: '/krs/pengisian'
       fullPath: '/krs/pengisian'
-      preLoaderRoute: typeof mahasiswaKrsPengisianRouteImport
-      parentRoute: typeof mahasiswaRouteRoute
+      preLoaderRoute: typeof krsKrsPengisianRouteImport
+      parentRoute: typeof krsRouteRoute
     }
-    '/(mahasiswa)/krs/lihat': {
-      id: '/(mahasiswa)/krs/lihat'
+    '/(krs)/krs/lihat': {
+      id: '/(krs)/krs/lihat'
       path: '/krs/lihat'
       fullPath: '/krs/lihat'
-      preLoaderRoute: typeof mahasiswaKrsLihatRouteImport
-      parentRoute: typeof mahasiswaRouteRoute
+      preLoaderRoute: typeof krsKrsLihatRouteImport
+      parentRoute: typeof krsRouteRoute
     }
   }
 }
 
-interface mahasiswaRouteRouteChildren {
-  mahasiswaDashLazyRoute: typeof mahasiswaDashLazyRoute
-  mahasiswaKrsLihatRoute: typeof mahasiswaKrsLihatRoute
-  mahasiswaKrsPengisianRoute: typeof mahasiswaKrsPengisianRoute
+interface krsRouteRouteChildren {
+  krsDashLazyRoute: typeof krsDashLazyRoute
+  krsKrsLihatRoute: typeof krsKrsLihatRoute
+  krsKrsPengisianRoute: typeof krsKrsPengisianRoute
 }
 
-const mahasiswaRouteRouteChildren: mahasiswaRouteRouteChildren = {
-  mahasiswaDashLazyRoute: mahasiswaDashLazyRoute,
-  mahasiswaKrsLihatRoute: mahasiswaKrsLihatRoute,
-  mahasiswaKrsPengisianRoute: mahasiswaKrsPengisianRoute,
+const krsRouteRouteChildren: krsRouteRouteChildren = {
+  krsDashLazyRoute: krsDashLazyRoute,
+  krsKrsLihatRoute: krsKrsLihatRoute,
+  krsKrsPengisianRoute: krsKrsPengisianRoute,
 }
 
-const mahasiswaRouteRouteWithChildren = mahasiswaRouteRoute._addFileChildren(
-  mahasiswaRouteRouteChildren,
+const krsRouteRouteWithChildren = krsRouteRoute._addFileChildren(
+  krsRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  mahasiswaRouteRoute: mahasiswaRouteRouteWithChildren,
+  krsRouteRoute: krsRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport

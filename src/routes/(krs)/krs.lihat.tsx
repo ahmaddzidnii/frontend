@@ -10,8 +10,9 @@ import { TabelInformasiUmum } from "@/components/tables/TabelInformasiUmum";
 import { TabsList, Tabs, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getKelasDiambilMhsOptions } from "@/queries/kelas";
 import { informasiUmumMhsOptions } from "@/queries/mahasiswa";
+import { WrapperKrs } from "./-components/WrapperKrs";
 
-export const Route = createFileRoute("/(mahasiswa)/krs/lihat")({
+export const Route = createFileRoute("/(krs)/krs/lihat")({
   component: RouteComponent,
   loader: ({ context: { queryClient } }) => {
     queryClient.prefetchQuery(informasiUmumMhsOptions);
@@ -66,15 +67,6 @@ const InformasiUmumSectionSuspense = memo(() => {
   return <TabelInformasiUmum {...tableProps} />;
 });
 
-// Komponen untuk menampilkan header halaman
-const PageHeader = memo(() => (
-  <header className="bg-white shadow w-full">
-    <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15]">
-      <span className="text-xl">Data Isian KRS Terakhir</span>
-    </nav>
-  </header>
-));
-
 // Komponen untuk menampilkan alert informasi
 const InfoAlert = memo(() => (
   <Alert>
@@ -93,9 +85,8 @@ const InfoAlert = memo(() => (
 
 function RouteComponent() {
   return (
-    <>
-      <PageHeader />
-      <div className="shadow flex-1 p-10 flex flex-col gap-5 bg-[#ecedf1]">
+    <WrapperKrs title="Data Isian KRS Terakhir">
+      <div className="space-y-4">
         <InfoAlert />
         <Tabs defaultValue="informasiUmum">
           <TabsList>
@@ -116,7 +107,7 @@ function RouteComponent() {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </WrapperKrs>
   );
 }
 
