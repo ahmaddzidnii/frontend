@@ -44,7 +44,10 @@ export const TableSyaratPengisianKrsSuspense = ({ onSyaratPengisisanKrsEnabled }
   }, [syaratKrs.pengisisan_krs_enabled, onSyaratPengisisanKrsEnabled]);
 
   return (
-    <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+    <table
+      className="text-sm"
+      style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}
+    >
       {/* Header Tabel */}
       <thead>
         <tr>

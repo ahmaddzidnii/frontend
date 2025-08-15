@@ -23,7 +23,7 @@ export const Route = createFileRoute("/(krs)/krs/pengisian")({
 // Komponen untuk alert informasi
 const InfoAlert = memo(() => (
   <Alert>
-    <p>
+    <p className="text-sm md:text-base">
       Jika mengalami error silahkan disampaikan melalui{" "}
       <a
         target="_blank"
@@ -44,6 +44,7 @@ const PengisianKrsButton = memo(({ isVisible }: { isVisible: boolean }) => {
     <Button
       className="ms-auto"
       asChild
+      size={"sm"}
     >
       <Link
         to="."
@@ -64,7 +65,7 @@ const SyaratPengisianSection = memo(({ onSyaratEnabled, isKrsEnabled }: { onSyar
     </TabsList>
     <TabsContent value="syaratPengisian">
       <div className="flex flex-col">
-        <div className="w-full max-w-4xl mx-auto p-4">
+        <div className="w-full max-w-4xl mx-auto p-2 md:p-4">
           <div className="overflow-x-auto">
             <TableSyaratPengisianKrs onSyaratPengisisanKrsEnabled={onSyaratEnabled} />
           </div>
@@ -79,10 +80,10 @@ const SyaratPengisianSection = memo(({ onSyaratEnabled, isKrsEnabled }: { onSyar
 const InfoAlerts = memo(() => (
   <>
     <Alert variant="info">
-      <p>Apabila kouta penuh,mata kuliah tidak ada dan jadwal bentrok, silahkan hubungi Fakultas/Program Studi</p>
+      <p className="text-sm md:text-base">Apabila kouta penuh,mata kuliah tidak ada dan jadwal bentrok, silahkan hubungi Fakultas/Program Studi</p>
     </Alert>
     <Alert variant="info">
-      <p>
+      <p className="text-sm md:text-base">
         Menu cetak KRS disediakan di &nbsp;
         <a
           className="text-[#105E15] font-semibold hover:underline"
@@ -99,35 +100,35 @@ const InfoAlerts = memo(() => (
 const LegendSection = memo(() => (
   <div>
     <h2 className="font-bold mb-4">Keterangan :</h2>
-    <ul className="grid grid-cols-4">
-      <li className="flex items-center justify-center gap-4">
-        <Button className="pointer-events-none [&_svg]:size-5">
+    <ul className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
+        <Button className="mr-4 pointer-events-none [&_svg]:size-5">
           <FaPlus />
         </Button>
         Ambil Kelas
       </li>
-      <li className="flex items-center justify-center gap-4">
+      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
         <Button
           variant="destructive"
-          className="pointer-events-none [&_svg]:size-5"
+          className="mr-4 pointer-events-none [&_svg]:size-5"
         >
           <FaTrash />
         </Button>
         Hapus Kelas
       </li>
-      <li className="flex items-center justify-center gap-4">
+      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
         <Button
           variant="reloadKouta"
-          className="pointer-events-none [&_svg]:size-5"
+          className="mr-4 pointer-events-none [&_svg]:size-5"
         >
           <FaSync />
         </Button>
         Reload Kouta
       </li>
-      <li className="flex items-center justify-center gap-4">
+      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
         <Button
           variant="kelasPenuh"
-          className="pointer-events-none [&_svg]:size-5"
+          className="mr-4 pointer-events-none [&_svg]:size-5"
         >
           <FaExclamation />
         </Button>

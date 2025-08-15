@@ -14,7 +14,7 @@ function RouteComponent() {
     <WrapperKrs title="Dashboard">
       <div className="space-y-4">
         <Alert>
-          <p>
+          <p className="text-sm md:text-base">
             Jika mengalami error silahkan disampaikan melalui{" "}
             <a
               target="_blank"
@@ -26,7 +26,7 @@ function RouteComponent() {
           </p>
         </Alert>
         <Alert>
-          <p>
+          <p className="text-sm md:text-base">
             Assalamu'alaikum wa rahmatullahi wa barakatuh,
             <b className="text-[#105E15]">
               &nbsp;

@@ -74,6 +74,19 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     }
   }, [pathname, isMobile]);
 
+  // Disable body scroll saat sidebar open
+  useEffect(() => {
+    if (isSidebarOpen && isMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isSidebarOpen, isMobile]);
+
   const handleLogout = async () => {
     const isConfirmed = await confirm({
       message: "Apakah Anda yakin ingin keluar dari Kartu Rencana Studi?",
@@ -106,11 +119,11 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <aside
           id="sidebar"
           className={`
-            bg-white shadow w-72 shrink-0 rounded-l-xl z-50
-            ${isMobile ? "fixed left-0 top-20 bottom-0 h-[calc(100vh-5rem)]" : "static"}
-            ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
-            transition-transform duration-300 ease-in-out
-          `}
+    bg-white shadow shrink-0 rounded-none z-50 pt-16 md:pt-0
+    ${isMobile ? "fixed left-0 top-0 bottom-0 w-full h-full" : "w-72 static rounded-l-xl"}
+    ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
+    transition-transform duration-300 ease-in-out
+  `}
         >
           <div className="relative h-[52px] flex items-center pl-5">
             <span className="font-bold">Navigasi</span>
