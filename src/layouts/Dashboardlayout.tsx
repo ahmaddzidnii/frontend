@@ -1,16 +1,16 @@
-import { ChevronRight, MenuIcon } from "lucide-react";
 import { FaListCheck } from "react-icons/fa6";
-import { FaClipboard, FaHome, FaSignOutAlt } from "react-icons/fa";
+import { ChevronRight, MenuIcon } from "lucide-react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { FaClipboard, FaHome, FaSignOutAlt } from "react-icons/fa";
 
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { SidebarButton } from "@/components/SidebarButton";
-import { useConfirmation } from "@/hooks/useConfirmDialog";
-import { useAuth } from "@/context/AuthContext";
 import { getInitials } from "@/lib/get-inisial";
+import { useAuth } from "@/context/AuthContext";
 import { useLogout } from "@/hooks/auth/useLogout";
+import { useConfirmation } from "@/hooks/useConfirmDialog";
+import { SidebarButton } from "@/components/SidebarButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -23,15 +23,15 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { logout } = useLogout();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null); // null = belum diketahui
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const pathname = location.pathname;
   const { confirm } = useConfirmation();
 
-  // Handle screen resize
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 1024; // lg breakpoint
+      const mobile = window.innerWidth < 1181; // lg breakpoint
       setIsMobile(mobile);
 
       // Auto close sidebar on mobile when switching from desktop
@@ -42,6 +42,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
     // Set initial state
     handleResize();
+    setIsInitialized(true);
 
     // Add event listener
     window.addEventListener("resize", handleResize);
@@ -52,6 +53,8 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
+    if (!isInitialized) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (isMobile && isSidebarOpen) {
         const sidebar = document.getElementById("sidebar");
@@ -65,17 +68,19 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMobile, isSidebarOpen]);
+  }, [isMobile, isSidebarOpen, isInitialized]);
 
   // Close sidebar when route changes on mobile
   useEffect(() => {
-    if (isMobile) {
+    if (isMobile && isInitialized) {
       setIsSidebarOpen(false);
     }
-  }, [pathname, isMobile]);
+  }, [pathname, isMobile, isInitialized]);
 
   // Disable body scroll saat sidebar open
   useEffect(() => {
+    if (!isInitialized) return;
+
     if (isSidebarOpen && isMobile) {
       document.body.style.overflow = "hidden";
     } else {
@@ -85,7 +90,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isSidebarOpen, isMobile]);
+  }, [isSidebarOpen, isMobile, isInitialized]);
 
   const handleLogout = async () => {
     const isConfirmed = await confirm({
@@ -103,6 +108,18 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Jangan render sampai initialized untuk menghindari flickering
+  if (!isInitialized || isMobile === null) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#105E15]"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar />
@@ -119,7 +136,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <aside
           id="sidebar"
           className={`
-    bg-white shadow shrink-0 rounded-none z-50 pt-16 md:pt-0
+    bg-white shadow shrink-0 rounded-none z-50 pt-16 lg:pt-0
     ${isMobile ? "fixed left-0 top-0 bottom-0 w-full h-full" : "w-72 static rounded-l-xl"}
     ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
     transition-transform duration-300 ease-in-out

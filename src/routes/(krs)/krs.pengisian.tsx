@@ -67,7 +67,9 @@ const SyaratPengisianSection = memo(({ onSyaratEnabled, isKrsEnabled }: { onSyar
       <div className="flex flex-col">
         <div className="w-full max-w-4xl mx-auto p-2 md:p-4">
           <div className="overflow-x-auto">
-            <TableSyaratPengisianKrs onSyaratPengisisanKrsEnabled={onSyaratEnabled} />
+            <div className="min-w-lg">
+              <TableSyaratPengisianKrs onSyaratPengisisanKrsEnabled={onSyaratEnabled} />
+            </div>
           </div>
         </div>
         <PengisianKrsButton isVisible={isKrsEnabled} />

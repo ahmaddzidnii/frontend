@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { getErrorMessage } from "@/lib/errors";
+
 export const Route = createLazyFileRoute("/(auth)/login")({
   component: RouteComponent,
 });
@@ -32,18 +33,18 @@ function RouteComponent() {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col items-center justify-center w-full h-full gap-5">
+      <div className="flex flex-col items-center justify-center w-full h-full gap-3 sm:gap-5 px-4 sm:px-0">
         <Logo />
-        <Card className="w-[450px] rounded-[5px] border-t-5 border-t-[#105E15]">
-          <CardContent className="flex flex-col gap-5">
+        <Card className="w-full max-w-[450px] sm:w-[450px] rounded-[5px] border-t-4 sm:border-t-5 border-t-[#105E15]">
+          <CardContent className="flex flex-col gap-3 sm:gap-5 p-4 sm:p-6">
             <CardHeader className="text-center p-0">
-              <h1 className="uppercase font-bold text-foreground">KARTU RENCANA STUDI</h1>
-              <div className="rounded-[5px] bg-[#D2EBF0] text-foreground text-start p-5">
+              <h1 className="uppercase font-bold text-foreground text-sm sm:text-base">KARTU RENCANA STUDI</h1>
+              <div className="rounded-[5px] bg-[#D2EBF0] text-foreground text-start p-3 sm:p-5 text-xs sm:text-sm">
                 Jika mengalami error bisa disampaikan melalui{" "}
                 <a
                   href="https://uinsk.id/AplikasiKRS"
                   target="_blank"
-                  className="hover:underline font-bold text-[#105E15]"
+                  className="hover:underline font-bold text-[#105E15] break-all sm:break-normal"
                 >
                   https://uinsk.id/AplikasiKRS
                 </a>
@@ -52,13 +53,13 @@ function RouteComponent() {
             {isDalamJadwal ? (
               <FormComponent />
             ) : (
-              <div className="rounded-[5px] bg-[#FEE2E2] text-red-600 font-semibold p-5 text-center">
-                <p className="text-sm">Aplikasi KRS ditutup, silahkan mengisi KRS pada jadwal yang sudah ditentukan.</p>
+              <div className="rounded-[5px] bg-[#FEE2E2] text-red-600 font-semibold p-3 sm:p-5 text-center">
+                <p className="text-xs sm:text-sm">Aplikasi KRS ditutup, silahkan mengisi KRS pada jadwal yang sudah ditentukan.</p>
               </div>
             )}
           </CardContent>
         </Card>
-        <p className="text-muted-foreground text-xs text-center">
+        <p className="text-muted-foreground text-xs text-center px-4 max-w-md">
           Copyright © {new Date().getFullYear()} <span className="font-bold">PTIPD - UIN Sunan Kalijaga.</span> All rights reserved.
         </p>
       </div>
@@ -72,7 +73,7 @@ const UsernameField = memo(
     <div className="flex flex-col space-y-1">
       <label
         htmlFor="nim"
-        className="text-sm font-medium text-gray-700 dark:text-gray-300"
+        className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300"
       >
         Username
       </label>
@@ -83,15 +84,15 @@ const UsernameField = memo(
           onChange={onChange}
           type="text"
           placeholder="Masukkan username Anda"
-          className={`flex h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 pr-13 ${
+          className={`flex h-9 sm:h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-xs sm:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 pr-11 sm:pr-13 ${
             error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-[#105E15]"
           }`}
         />
-        <div className="absolute inset-y-0 right-0 flex items-center px-3 border rounded-e-[5px] pointer-events-none bg-[#EAEBEC]">
-          <UserIcon className="h-5 w-5 text-gray-400" />
+        <div className="absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 border rounded-e-[5px] pointer-events-none bg-[#EAEBEC]">
+          <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
         </div>
       </div>
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-xs sm:text-sm text-red-600 mt-1">{error}</p>}
     </div>
   )
 );
@@ -115,13 +116,13 @@ const PasswordField = memo(
       <div className="flex items-center justify-between">
         <label
           htmlFor="password"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Password
         </label>
         <a
           href="#"
-          className="text-sm text-[#105E15] hover:underline"
+          className="text-xs sm:text-sm text-[#105E15] hover:underline"
         >
           Lupa Password?
         </a>
@@ -133,25 +134,29 @@ const PasswordField = memo(
           onChange={onChange}
           type={showPassword ? "text" : "password"}
           placeholder="Masukkan password Anda"
-          className={`flex h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 pr-20 ${
+          className={`flex h-9 sm:h-10 w-full rounded-[5px] border bg-transparent px-3 py-2 text-xs sm:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 pr-16 sm:pr-20 ${
             error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-[#105E15]"
           }`}
         />
-        <div className="absolute inset-y-0 right-10 flex items-center pr-3">
+        <div className="absolute inset-y-0 right-8 sm:right-10 flex items-center pr-2 sm:pr-3">
           <button
             type="button"
             onClick={onToggleVisibility}
-            className="p-1.5 rounded-full hover:bg-gray-200"
+            className="p-1 sm:p-1.5 rounded-full hover:bg-gray-200 touch-manipulation"
             aria-label="Toggle password visibility"
           >
-            {showPassword ? <EyeOffIcon className="h-5 w-5 text-gray-500" /> : <EyeIcon className="h-5 w-5 text-gray-500" />}
+            {showPassword ? (
+              <EyeOffIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+            ) : (
+              <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+            )}
           </button>
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-center border rounded-e-[5px] px-3 bg-[#EAEBEC] pointer-events-none">
-          <LockIcon className="h-5 w-5 text-gray-400" />
+        <div className="absolute inset-y-0 right-0 flex items-center border rounded-e-[5px] px-2 sm:px-3 bg-[#EAEBEC] pointer-events-none">
+          <LockIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
         </div>
       </div>
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-xs sm:text-sm text-red-600 mt-1">{error}</p>}
     </div>
   )
 );
@@ -163,7 +168,7 @@ const ErrorAlert = memo(({ isError, error }: { isError: boolean; error: any }) =
   return (
     <Alert variant="error">
       <div className="flex flex-col gap-1 text-red-600">
-        <p className="text-sm font-semibold">{getErrorMessage(error)}</p>
+        <p className="text-xs sm:text-sm font-semibold">{getErrorMessage(error)}</p>
       </div>
     </Alert>
   );
@@ -237,7 +242,7 @@ export function FormComponent() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-3 sm:gap-4"
       noValidate // Mencegah validasi bawaan browser
     >
       <ErrorAlert
@@ -262,7 +267,7 @@ export function FormComponent() {
       <Button
         type="submit"
         disabled={isPending}
-        className="ml-auto"
+        className="ml-auto text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6"
       >
         {isPending ? "Loading..." : "Login"}
       </Button>

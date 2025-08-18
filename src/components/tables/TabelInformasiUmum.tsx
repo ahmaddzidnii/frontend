@@ -13,7 +13,7 @@ export const TabelInformasiUmum = ({ tahunAkademik, semester, ipk, sksKumulatif,
   return (
     <div className="w-full">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm  min-w-lg">
           {/* Body Tabel */}
           <tbody>
             {/* Baris 1 */}
