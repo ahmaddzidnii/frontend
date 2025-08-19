@@ -33,7 +33,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   ),
   component: () => (
     <>
-      <Suspense fallback={<LoaderFallback className="h-screen" />}>
+      <Suspense fallback={<LoaderFallback />}>
         <AuthProvider>
           <ConfirmationProvider>
             <AlertDialogProvider>

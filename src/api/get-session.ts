@@ -41,7 +41,7 @@ export const getSessionData = async (): Promise<GetSessionResult> => {
 
     if (axios.isAxiosError(error) && error.response?.status === 403) {
       return {
-        error_code: error.response.data.error_code,
+        error_code: error.response.data.message,
       };
     }
 

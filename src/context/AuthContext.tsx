@@ -13,7 +13,14 @@ interface User {
 export interface AuthContextType {
   status: "pending" | "authenticated" | "unauthenticated";
   user: User | null;
-  isDalamJadwal?: boolean;
+  diluarJadwalPengisian?: {
+    yes: boolean;
+    messageFromBackend: string;
+  };
+  diluarJamPengisian?: {
+    yes: boolean;
+    messageFromBackend: string;
+  };
 }
 
 export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -52,20 +59,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return user ? "authenticated" : "unauthenticated";
   }, [user]);
 
-  const isDalamJadwal = useMemo(() => {
-    return !(isErrorData(data) && data.error_code === "KRS_SCHEDULE_NOT_ALLOWED");
+  const isDiluarJadwal = useMemo(() => {
+    return isErrorData(data) && data.error_code === "Akses aplikasi saat ini sedang dinonaktifkan karena bukan masa pengisian KRS.";
+  }, [data]);
+
+  const isDiluarJam = useMemo(() => {
+    return isErrorData(data) && data.error_code.startsWith("KRS hanya dapat diakses antara jam");
   }, [data]);
 
   useEffect(() => {
     if (data === null) {
       localStorage.removeItem("session_id");
     }
-  }, [data, isDalamJadwal]);
+  }, [data, isDiluarJadwal, isDiluarJam]);
 
   const value: AuthContextType = {
     status,
     user,
-    isDalamJadwal,
+    diluarJadwalPengisian: {
+      yes: isDiluarJadwal,
+      messageFromBackend: isErrorData(data) ? data.error_code : "",
+    },
+    diluarJamPengisian: {
+      yes: isDiluarJam,
+      messageFromBackend: isErrorData(data) ? data.error_code : "",
+    },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

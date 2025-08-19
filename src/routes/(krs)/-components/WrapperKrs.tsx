@@ -5,7 +5,7 @@ interface WrapperKrsProps {
 
 export const WrapperKrs = ({ children, title }: WrapperKrsProps) => {
   return (
-    <div className="rounded-r-xl overflow-hidden shadow h-full">
+    <div className="lg:rounded-r-xl overflow-hidden shadow h-full">
       <header className="bg-white shadow  w-full">
         <nav className="px-3 py-2.5 border-b-4 w-max border-b-[#105E15] ">
           <span className="text-base sm:text-lg md:text-xl">{title}</span>

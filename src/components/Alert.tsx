@@ -7,10 +7,10 @@ interface AlertProps {
 export const Alert = ({ children, variant = "default", size = "md" }: AlertProps) => {
   // Variant styles
   const variantStyles = {
-    default: "bg-[#D2EBF0] text-foreground border-blue-200",
+    default: "bg-[#d1ecf1] text-[#0c5460] border-[#bee5eb]",
     success: "bg-green-50 text-green-800 border-green-200",
     warning: "bg-yellow-50 text-yellow-800 border-yellow-200",
-    error: "bg-red-50 text-red-800 border-red-200",
+    error: "bg-[#f8d7da] text-[#721c24] border-[#f5c6cb] ",
     info: "bg-[#fff3cd] text-foreground border-yellow-200",
   };
 
@@ -21,7 +21,14 @@ export const Alert = ({ children, variant = "default", size = "md" }: AlertProps
     lg: "p-6 text-lg",
   };
 
-  const baseStyles = "rounded-[5px] text-start border";
+  const baseStyles = "rounded-[5px] text-start border py-[12px] px-[20px] ";
 
-  return <div className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]}`}>{children}</div>;
+  return (
+    <div
+      role="alert"
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]}`}
+    >
+      {children}
+    </div>
+  );
 };
