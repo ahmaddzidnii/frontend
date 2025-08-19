@@ -3,7 +3,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { FaLock, FaUser } from "react-icons/fa6";
 import { Navigate } from "@tanstack/react-router";
 import { useState, useCallback, memo } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 
 import { Logo } from "@/components/Logo";
 import { Alert } from "@/components/Alert";
@@ -280,13 +280,20 @@ export function FormComponent() {
         onToggleVisibility={togglePasswordVisibility}
       />
 
-      <Button
-        type="submit"
-        disabled={isPending}
-        className="ml-auto text-sm h-9 sm:h-10 px-3 rounded-[5px]!"
-      >
-        {isPending ? "Loading..." : "Login"}
-      </Button>
+      {!isPending ? (
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="ml-auto text-sm h-10 px-3 rounded-[5px]!"
+        >
+          {isPending ? "Loading..." : "Login"}
+        </Button>
+      ) : (
+        <div className="h-10 flex items-center justify-center w-full text-sm text-[#777777]">
+          <Loader2Icon className="animate-spin mr-2" />
+          Harap Menunggu...
+        </div>
+      )}
     </form>
   );
 }
