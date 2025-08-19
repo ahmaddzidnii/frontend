@@ -9,7 +9,9 @@ export const useLogin = () => {
     },
     onSuccess: (data) => {
       localStorage.setItem("session_id", data.session_id);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.href = "/dash";
+      });
     },
     onError: (error) => {
       console.error("Login failed:", error);

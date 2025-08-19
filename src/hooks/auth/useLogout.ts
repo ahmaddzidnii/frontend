@@ -6,7 +6,7 @@ export const useLogout = () => {
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      window.localStorage.removeItem("session_id");
+      localStorage.removeItem("session_id");
       window.location.reload();
     },
     onError: (error) => {
