@@ -251,7 +251,7 @@ const DaftarKelasMataKuliahSuspense = memo(() => {
   }, [dataKrs]);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 overflow-x-auto">
       <table className="w-full text-sm text-left text-gray-700 border-collapse">
         <TableHeader />
         <tbody>{tableRows}</tbody>
