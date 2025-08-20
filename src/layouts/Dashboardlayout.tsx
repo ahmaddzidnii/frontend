@@ -1,11 +1,9 @@
 import { FaListCheck } from "react-icons/fa6";
-import { ChevronRight, MenuIcon } from "lucide-react";
 import { useState, useEffect, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { FaClipboard, FaHome, FaSignOutAlt } from "react-icons/fa";
 
 import { Navbar } from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
 import { getInitials } from "@/lib/get-inisial";
 import { useAuth } from "@/context/AuthContext";
 import { useLogout } from "@/hooks/auth/useLogout";

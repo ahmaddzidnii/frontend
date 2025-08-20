@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// 1. Perbarui Interface
 interface ConfirmationOptions {
   title?: string;
   message: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   type?: "danger" | "warning" | "info";
-  onConfirm?: () => Promise<any>; // Fungsi async saat konfirmasi
+  onConfirm?: () => Promise<any>;
 }
 
 interface ConfirmationContextType {
@@ -27,7 +27,6 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
     message: "Apakah Anda yakin?",
   });
   const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
-  // 2. Tambahkan state untuk loading
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
     });
   };
 
-  // 3. Ubah handleConfirm menjadi async dan kelola loading state
   const handleConfirm = async () => {
     if (!options.onConfirm) {
       if (resolver) {
@@ -65,20 +63,20 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
 
     setIsLoading(true);
     try {
-      await options.onConfirm(); // Jalankan fungsi async
+      await options.onConfirm();
       if (resolver) {
-        resolver(true); // Kirim status sukses
+        resolver(true);
       }
       closeModal();
     } catch (error) {
       console.error("Confirmation onConfirm failed:", error);
       if (resolver) {
-        resolver(false); // Kirim status gagal
+        resolver(false);
       }
 
       closeModal();
     } finally {
-      setIsLoading(false); // Selalu set loading ke false di akhir
+      setIsLoading(false);
     }
   };
 
@@ -92,47 +90,76 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
   const closeModal = () => {
     setIsOpen(false);
     setResolver(null);
-    setIsLoading(false); // Pastikan loading state di-reset
+    setIsLoading(false);
   };
+
+  // Variants untuk animasi modal
+  const modalVariants = {
+    initial: {
+      opacity: 0,
+      scale: 0.8,
+      y: -50,
+    },
+    animate: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 25,
+        stiffness: 300,
+        duration: 0.3,
+      },
+    },
+  };
+
   return (
     <ConfirmationContext.Provider value={{ confirm }}>
       {children}
 
-      {/* Modal Component */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-[5px] p-5 max-w-xl w-full mx-4 shadow-xl">
-            <div className="mb-4">
-              <h3 className="mb-2 text-2xl">Konfirmasi</h3>
-              {options.message ? (
-                <div className="text-muted-foreground text-sm">{options.message}</div>
-              ) : (
-                <div className="text-muted-foreground text-sm">Apakah Anda yakin?</div>
-              )}
-            </div>
+      {/* Modal Component dengan AnimatePresence */}
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+            <motion.div
+              className="bg-white rounded-[5px] p-5 max-w-xl w-full mx-4 shadow-xl"
+              variants={modalVariants as any}
+              initial="initial"
+              animate="animate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4">
+                <h3 className="mb-2 text-2xl">Konfirmasi</h3>
+                {options.message ? (
+                  <div className="text-muted-foreground text-sm">{options.message}</div>
+                ) : (
+                  <div className="text-muted-foreground text-sm">Apakah Anda yakin?</div>
+                )}
+              </div>
 
-            <div className="flex justify-end space-x-3 ">
-              <Button
-                onClick={handleConfirm}
-                variant={"default"}
-                className="uppercase"
-                disabled={isLoading}
-                role={isLoading ? "status" : "button"}
-              >
-                {options.confirmText}
-              </Button>
-              <Button
-                onClick={handleCancel}
-                className="px-4 py-2 uppercase"
-                variant="secondary"
-                disabled={isLoading}
-              >
-                {options.cancelText}
-              </Button>
-            </div>
+              <div className="flex justify-end space-x-3">
+                <Button
+                  onClick={handleConfirm}
+                  variant={"default"}
+                  className="uppercase"
+                  disabled={isLoading}
+                  role={isLoading ? "status" : "button"}
+                >
+                  {options.confirmText}
+                </Button>
+                <Button
+                  onClick={handleCancel}
+                  className="px-4 py-2 uppercase"
+                  variant="secondary"
+                  disabled={isLoading}
+                >
+                  {options.cancelText}
+                </Button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </ConfirmationContext.Provider>
   );
 };
