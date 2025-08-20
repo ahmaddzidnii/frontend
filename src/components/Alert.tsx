@@ -11,7 +11,7 @@ export const Alert = ({ children, variant = "default", size = "md" }: AlertProps
     success: "bg-green-50 text-green-800 border-green-200",
     warning: "bg-yellow-50 text-yellow-800 border-yellow-200",
     error: "bg-[#f8d7da] text-[#721c24] border-[#f5c6cb] ",
-    info: "bg-[#fff3cd] text-foreground border-yellow-200",
+    info: "bg-[#fff3cd] text-[#856404] border-[#ffeeba]",
   };
 
   // Size styles

@@ -12,6 +12,8 @@ import { TabelPenawaranKelasBatch } from "./-components/TabelPenawaranKelasBatch
 import { TableSyaratPengisianKrs } from "./-components/TableSyaratPengisianKrs";
 import { syaratPengisianKrsOptions } from "@/queries/mahasiswa";
 import { WrapperKrs } from "./-components/WrapperKrs";
+import { useQueryClient } from "@tanstack/react-query";
+import { getDaftarPenawaranKelasOptions } from "@/queries/kelas";
 
 export const Route = createFileRoute("/(krs)/krs/pengisian")({
   component: RouteComponent,
@@ -19,22 +21,6 @@ export const Route = createFileRoute("/(krs)/krs/pengisian")({
     queryClient.prefetchQuery(syaratPengisianKrsOptions);
   },
 });
-
-// Komponen untuk alert informasi
-const InfoAlert = memo(() => (
-  <Alert>
-    <p className="text-sm md:text-base">
-      Jika mengalami error silahkan disampaikan melalui{" "}
-      <a
-        target="_blank"
-        className="hover:underline font-bold text-[#105E15] italic"
-        href="https://uinsk.id/AplikasiKRS"
-      >
-        https://uinsk.id/AplikasiKRS
-      </a>
-    </p>
-  </Alert>
-));
 
 // Komponen untuk tombol pengisian KRS
 const PengisianKrsButton = memo(({ isVisible }: { isVisible: boolean }) => {
@@ -82,10 +68,10 @@ const SyaratPengisianSection = memo(({ onSyaratEnabled, isKrsEnabled }: { onSyar
 const InfoAlerts = memo(() => (
   <>
     <Alert variant="info">
-      <p className="text-sm md:text-base">Apabila kouta penuh,mata kuliah tidak ada dan jadwal bentrok, silahkan hubungi Fakultas/Program Studi</p>
+      <p className="text-sm">Apabila kouta penuh,mata kuliah tidak ada dan jadwal bentrok, silahkan hubungi Fakultas/Program Studi</p>
     </Alert>
     <Alert variant="info">
-      <p className="text-sm md:text-base">
+      <p className="text-sm">
         Menu cetak KRS disediakan di &nbsp;
         <a
           className="text-[#105E15] font-semibold hover:underline"
@@ -101,15 +87,15 @@ const InfoAlerts = memo(() => (
 // Komponen untuk legend keterangan tombol
 const LegendSection = memo(() => (
   <div>
-    <h2 className="font-bold mb-4">Keterangan :</h2>
+    <h2 className="font-bold text-sm mb-4">Keterangan :</h2>
     <ul className="grid grid-cols-2 md:grid-cols-4 gap-2">
-      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
+      <li className="flex items-center justify-start md:justify-center text-sm">
         <Button className="mr-4 pointer-events-none [&_svg]:size-5">
           <FaPlus />
         </Button>
         Ambil Kelas
       </li>
-      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
+      <li className="flex items-center justify-start md:justify-center text-sm">
         <Button
           variant="destructive"
           className="mr-4 pointer-events-none [&_svg]:size-5"
@@ -118,7 +104,7 @@ const LegendSection = memo(() => (
         </Button>
         Hapus Kelas
       </li>
-      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
+      <li className="flex items-center justify-start md:justify-center text-sm">
         <Button
           variant="reloadKouta"
           className="mr-4 pointer-events-none [&_svg]:size-5"
@@ -127,7 +113,7 @@ const LegendSection = memo(() => (
         </Button>
         Reload Kouta
       </li>
-      <li className="flex items-center justify-start md:justify-center text-sm md:text-base">
+      <li className="flex items-center justify-start md:justify-center text-sm">
         <Button
           variant="kelasPenuh"
           className="mr-4 pointer-events-none [&_svg]:size-5"
@@ -161,18 +147,34 @@ const InformasiTabs = memo(() => (
 ));
 
 // Komponen untuk bagian tabel penawaran kelas
-const PenawaranKelasSection = memo(() => (
-  <div
-    className="bg-white p-5 rounded-[5px] shadow flex flex-col"
-    id="isi-krs"
-  >
-    <div className="w-full max-w-7xl rounded-lg">
-      <div className="overflow-x-auto">
-        <TabelPenawaranKelasBatch />
+const PenawaranKelasSection = memo(() => {
+  const queryClient = useQueryClient();
+
+  const handleReloadPenawaranKelas = () => {
+    queryClient.refetchQueries(getDaftarPenawaranKelasOptions);
+  };
+
+  return (
+    <div
+      className="bg-white p-5 rounded-[5px] shadow flex flex-col"
+      id="isi-krs"
+    >
+      <div className="w-full max-w-7xl rounded-lg flex flex-col">
+        <Button
+          variant="reloadKouta"
+          className="mb-2 ml-auto w-full md:w-auto"
+          onClick={handleReloadPenawaranKelas}
+        >
+          <FaSync />
+          Reload Penawaran Kelas
+        </Button>
+        <div className="overflow-x-auto">
+          <TabelPenawaranKelasBatch />
+        </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 function RouteComponent() {
   const [isKrsEnabled, setIsKrsEnabled] = useState(false);
@@ -183,9 +185,7 @@ function RouteComponent() {
 
   return (
     <WrapperKrs title="Pengisian Kartu Rencana Studi">
-      <div className="space-y-4">
-        <InfoAlert />
-
+      <div className="space-y-4 ">
         <SyaratPengisianSection
           onSyaratEnabled={handleSyaratEnabled}
           isKrsEnabled={isKrsEnabled}

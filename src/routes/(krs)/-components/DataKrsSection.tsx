@@ -90,50 +90,50 @@ export const DataKrsSection = () => {
             <tr>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase w-16 text-center border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  w-16 text-center border border-gray-300"
               >
                 No.
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  border border-gray-300"
               >
                 Mata Kuliah
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  text-center border border-gray-300"
               >
                 SKS
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  text-center border border-gray-300"
               >
                 Kelas
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  border border-gray-300"
               >
                 Jenis
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  border border-gray-300"
               >
                 Jadwal
               </th>
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  border border-gray-300"
               >
                 Dosen
               </th>
 
               <th
                 scope="col"
-                className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300"
+                className="px-4 py-3 font-semibold text-gray-600  text-center border border-gray-300"
               >
                 Aksi
               </th>
@@ -160,7 +160,7 @@ export const DataKrsSection = () => {
                   {/* Kelas */}
                   <td className="px-4 py-3 text-center align-top border border-gray-300">{k.nama_kelas}</td>
                   {/* Jenis */}
-                  <td className="px-4 py-3 align-top border border-gray-300 uppercase">{k.jenis_mata_kuliah}</td>
+                  <td className="px-4 py-3 align-top border border-gray-300 ">{k.jenis_mata_kuliah}</td>
                   {/* Jadwal */}
                   <td className="px-4 py-3 align-top border border-gray-300">
                     {k.jadwal.length > 0 ? (

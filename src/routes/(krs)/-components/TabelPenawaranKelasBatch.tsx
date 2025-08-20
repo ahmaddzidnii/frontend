@@ -17,7 +17,7 @@ export const TabelPenawaranKelasBatch = () => {
   // State untuk menyimpan pesan error per baris
   const [rowErrors, setRowErrors] = useState<{ [key: string]: string }>({});
 
-  const { data: daftarPenawaranKelas, isError, isLoading } = useQuery(getDaftarPenawaranKelasOptions);
+  const { data: daftarPenawaranKelas, isError, isLoading, isFetching } = useQuery(getDaftarPenawaranKelasOptions);
 
   const { mutate: batchRefreshKouta } = useMutation<BatchStatusResponse, Error, MutationVariables>({
     mutationFn: (data) => getStatusKoutaKelasBatch(data.id_kelas_list),
@@ -65,7 +65,7 @@ export const TabelPenawaranKelasBatch = () => {
     batchRefreshKouta({ id_kelas_list: [id_kelas] });
   };
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="h-[347.15px] flex items-center justify-center">
         <Spinner />
@@ -93,15 +93,15 @@ export const TabelPenawaranKelasBatch = () => {
     <table className="w-full text-sm text-left text-gray-700 border-collapse">
       <thead className="bg-gray-50">
         <tr>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase w-16 text-center border border-gray-300">No.</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300">Mata Kuliah</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300">SKS</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300">Kelas</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300">Jenis</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300">Jadwal</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300">Dosen</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase border border-gray-300">Terisi / Kuota</th>
-          <th className="px-4 py-3 font-semibold text-gray-600 uppercase text-center border border-gray-300">Aksi</th>
+          <th className="px-4 py-3 font-semibold w-16 text-center border border-gray-300">No.</th>
+          <th className="px-4 py-3 font-semibold border border-gray-300">Mata Kuliah</th>
+          <th className="px-4 py-3 font-semibold text-center border border-gray-300">SKS</th>
+          <th className="px-4 py-3 font-semibold text-center border border-gray-300">Kelas</th>
+          <th className="px-4 py-3 font-semibold border border-gray-300">Jenis</th>
+          <th className="px-4 py-3 font-semibold border border-gray-300">Jadwal</th>
+          <th className="px-4 py-3 font-semibold border border-gray-300">Dosen</th>
+          <th className="px-4 py-3 font-semibold border border-gray-300">Terisi / Kuota</th>
+          <th className="px-4 py-3 font-semibold text-center border border-gray-300">Aksi</th>
         </tr>
       </thead>
       <tbody>

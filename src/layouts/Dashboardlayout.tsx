@@ -23,7 +23,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { logout } = useLogout();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean | null>(null); // null = belum diketahui
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const pathname = location.pathname;
@@ -77,7 +77,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     }
   }, [pathname, isMobile, isInitialized]);
 
-  // Disable body scroll saat sidebar open
+  // Disable body scroll when sidebar open
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -108,7 +108,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Jangan render sampai initialized untuk menghindari flickering
+  // Don't render until initialized to avoid flickering
   if (!isInitialized || isMobile === null) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -122,51 +122,37 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <>
-      <Navbar />
-
-      {/* Mobile overlay */}
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      <Navbar
+        onToggleSidebar={toggleSidebar}
+        isSidebarOpen={isSidebarOpen}
+      />
 
       <div className="max-w-7xl mx-auto flex pt-20 min-h-screen rounded-2xl relative">
         <aside
           id="sidebar"
           className={`
-    bg-white shadow shrink-0 rounded-none z-50 pt-16 lg:pt-0
-    ${isMobile ? "fixed left-0 top-0 bottom-0 w-full h-full" : "w-72 static rounded-l-xl"}
-    ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
-    transition-transform duration-300 ease-in-out
-  `}
+            bg-white shadow shrink-0 rounded-none z-50 pt-16 lg:pt-0
+            ${isMobile ? "fixed left-0 top-0 bottom-0 w-full h-full" : "w-72 static rounded-l-xl"}
+            ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
+            transition-transform duration-300 ease-in-out
+          `}
         >
           <div className="relative h-[52px] flex items-center pl-5">
             <span className="font-bold">Navigasi</span>
-
-            <Button
-              id="menu-button"
-              className="absolute top-0 right-0 size-[52px] lg:hidden"
-              variant="ghost"
-              onClick={toggleSidebar}
-            >
-              <MenuIcon />
-            </Button>
           </div>
 
           <div className="p-4">
             <div className="border flex items-center justify-center flex-col p-5 rounded-[5px]">
               <span className="text-[100px] font-bold text-[#105E15]">{getInitials(user?.name || "Ahmad Zidni Hidayat")}</span>
               <div className="text-center">
-                <p className="font-semibold uppercase">{user?.name || "Ahmad Zidni Hidayat"}</p>
-                <p>{user?.nim || "23106050077"}</p>
+                <p className="font-semibold uppercase text-[#777777]">{user?.name || "Ahmad Zidni Hidayat"}</p>
+                <p className="text-[#777777] text-[13px]">{user?.nim || "23106050077"}</p>
               </div>
             </div>
           </div>
 
           {/* Menu */}
-          <div className="mt-5">
+          <div className="mt-5 text-[#777777] text-sm">
             <SidebarButton
               icon={FaHome}
               isActive={pathname === "/dash"}
@@ -200,50 +186,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </aside>
 
-        {/* Mobile menu button - only show when sidebar is closed */}
-        {/* {isMobile && !isSidebarOpen && (
-          <Button
-            className="fixed top-[5.5rem] left-4 z-40 lg:hidden shadow-lg"
-            variant="default"
-            size="sm"
-            onClick={toggleSidebar}
-          >
-            <MenuIcon className="w-4 h-4" />
-          </Button>
-        )} */}
+        {/* Mobile menu button - floating button when sidebar is closed */}
 
-        {isMobile && !isSidebarOpen && (
-          <button
-            className="group fixed top-1/2 left-0 transform -translate-y-1/2 z-40 lg:hidden
-             bg-gradient-to-r from-[#105E1] to-green-700 text-white
-             rounded-r-full shadow-2xl hover:shadow-green-500/25
-             transition-all duration-300 ease-out hover:scale-110 hover:translate-x-1"
-            onClick={toggleSidebar}
-          >
-            <div className="flex items-center justify-center py-4 px-3">
-              <div className="transform transition-transform duration-300 ease-out group-hover:translate-x-2 group-hover:scale-105">
-                <ChevronRight className="w-6 h-6" />
-              </div>
-            </div>
-
-            {/* Glow effect */}
-            <div
-              className="absolute inset-0 rounded-r-full
-                  bg-gradient-to-r from-green-400 to-green-600
-                  opacity-0 group-hover:opacity-20
-                  transition-opacity duration-300 blur-md"
-            ></div>
-          </button>
-        )}
-
-        <main
-          className={`
-          flex-1 flex flex-col
-          ${isMobile ? "w-full" : ""}
-        `}
-        >
-          {children}
-        </main>
+        <main className={`flex-1 flex flex-col ${isMobile ? "w-full" : ""}`}>{children}</main>
       </div>
 
       <footer className="shadow w-full p-4 flex items-center justify-center mt-5 bg-white">
